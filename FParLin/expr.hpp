@@ -58,10 +58,10 @@ template<typename A>
 using ExprF_ =
 boost::variant<
 	Const_,
-	boost::recursive_wrapper<Add_<A> >,
-	boost::recursive_wrapper<Mul_<A> >,
-	boost::recursive_wrapper<App_<A> >,
-	boost::recursive_wrapper<Lambda_<A> >,
+	Add_<A>,
+	Mul_<A>,
+	App_<A>,
+	Lambda_<A>,
 	Variable_
 >;
 

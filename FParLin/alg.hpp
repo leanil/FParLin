@@ -64,16 +64,14 @@ struct functor_visitor<Fun, ExtExprF<A>>
 		return Lam(f_(e.body()));
 	}
 
-	ExtExprF<B> operator()(Variable_ e) const {
-		return Var<B>();
+	ExtExprF<B> operator()(Variable_<A> e) const {
+		return Variable_<B>{e.id, make_shared<B>(cata(alg, *e.val))};
 	}
 private:
 	Fun f_;
 };
 
 struct alg_visitor : boost::static_visitor<int> {
-
-	alg_visitor(const std::map<Variable_, int>& subst) : subst(subst) {}
 
 	int operator()(Const_ i) const {
 		return i.value;
@@ -95,11 +93,9 @@ struct alg_visitor : boost::static_visitor<int> {
 		return e.body();
 	}
 
-	int operator()(Variable_ e) const {
-		return subst.at(e);
+	int operator()(Variable_<int> e) const {
+		return *e.val;
 	}
-
-	const std::map<Variable_, int>& subst;
 };
 
 //Fix<ExprF1> alg(ExprF2<int> e)
@@ -108,5 +104,5 @@ struct alg_visitor : boost::static_visitor<int> {
 //}
 
 int alg(ExtExprF<int> e) {
-	return boost::apply_visitor(alg_visitor(e.subst), e);
+	return boost::apply_visitor(alg_visitor(), e);
 }

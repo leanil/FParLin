@@ -47,8 +47,10 @@ struct Lambda_ {
 	shared_ptr<A> body_;
 };
 
+template<typename A>
 struct Variable_ {
 	char id;
+	shared_ptr<A> val;
 	bool operator<(const Variable_& v) const {
 		return id < v.id;
 	}
@@ -62,7 +64,7 @@ boost::variant<
 	Mul_<A>,
 	App_<A>,
 	Lambda_<A>,
-	Variable_
+	Variable_<A>
 >;
 
 template<typename A>
@@ -73,15 +75,15 @@ struct ExprF : ExprF_<A> {
 	ExprF(Mul_<A> c) : ExprF_<A>(c) {}
 	ExprF(App_<A> c) : ExprF_<A>(c) {}
 	ExprF(Lambda_<A> c) : ExprF_<A>(c) {}
-	ExprF(Variable_ c) : ExprF_<A>(c) {}
+	ExprF(Variable_<A> c) : ExprF_<A>(c) {}
 };
 
 template<typename A>
 struct ExtExprF : ExprF<A> {
 	using ExprF<A>::ExprF;
 	typedef ExtExprF<A> tag;
-	std::stack<int> values;
-	std::map<Variable_, int> subst;
+	std::stack<shared_ptr<A>> values;
+	std::map<Variable_<A>, shared_ptr<A>> subst;
 };
 
 using Expr = Fix<ExtExprF>;
@@ -104,9 +106,6 @@ ExtExprF<A> Lam(A a) { return Lambda_<A>{a}; }
 
 template<typename A = Expr>
 ExtExprF<A> Var() { 
-	Variable_ var{ 'x' };
-	ExtExprF<A> node(var);
-	node.subst[var] = 6;
-	return node;
+	return Variable_<A>{ 'x',  make_shared<A>(Const_{ 6 }) };
 }
 

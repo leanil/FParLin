@@ -33,38 +33,38 @@ fmap(Fun f, Fa fa) {
 		functor_visitor<Fun, typename Fa::tag>{f}, fa);
 }
 
-//fmap: ExtExprF
+//fmap: F0
 template<typename Fun, typename A>
-struct functor_visitor<Fun, ExtExprF<A>>
+struct functor_visitor<Fun, F0<A>>
 	: boost::static_visitor <
-	ExtExprF<typename std::result_of<Fun(A)>::type >>
+	F0<typename std::result_of<Fun(A)>::type >>
 {
 	typedef typename std::result_of<Fun(A)>::type B;
 
 	explicit functor_visitor(Fun f)
 		: f_(f) {}
 
-	ExtExprF<B> operator()(Const_ i) const {
+	F0<B> operator()(Const_ i) const {
 		return Const<B>(i.value);
 	}
 
-	ExtExprF<B> operator()(Add_<A> e) const {
+	F0<B> operator()(Add_<A> e) const {
 		return Add(f_(e.left()), f_(e.right()));
 	}
 
-	ExtExprF<B> operator()(Mul_<A> e) const {
+	F0<B> operator()(Mul_<A> e) const {
 		return Mul(f_(e.left()), f_(e.right()));
 	}
 
-	ExtExprF<B> operator()(App_<A> e) const {
+	F0<B> operator()(App_<A> e) const {
 		return App(f_(e.function()), f_(e.input()));
 	}
 
-	ExtExprF<B> operator()(Lambda_<A> e) const {
+	F0<B> operator()(Lambda_<A> e) const {
 		return Lam(f_(e.body()));
 	}
 
-	ExtExprF<B> operator()(Variable_<A> e) const {
+	F0<B> operator()(Variable_<A> e) const {
 		return Variable_<B>{e.id, make_shared<B>(cata(alg, *e.val))};
 	}
 private:
@@ -98,11 +98,6 @@ struct alg_visitor : boost::static_visitor<int> {
 	}
 };
 
-//Fix<ExprF1> alg(ExprF2<int> e)
-//{
-//	return boost::apply_visitor(alg_visitor{}, e);
-//}
-
-int alg(ExtExprF<int> e) {
+int alg(F0<int> e) {
 	return boost::apply_visitor(alg_visitor(), e);
 }

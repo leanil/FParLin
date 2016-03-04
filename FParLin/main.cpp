@@ -8,7 +8,7 @@ using namespace std;
 
 int main() {
 	// (2+3)*4 == 20
-	Expr testExpr1 =
+	Fix<F0> testExpr1 =
 		Fx(Mul(
 			Fx(Add(
 				Fx(Const(2)),
@@ -18,7 +18,7 @@ int main() {
 			));
 	cout << cata(alg, testExpr1) << endl;
 
-	Expr testExpr2 =
+	Fix<F0> testExpr2 =
 		Fx(Add(
 			Fx(App(
 				Fx(Lam(

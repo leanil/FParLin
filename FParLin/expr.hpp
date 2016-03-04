@@ -86,26 +86,36 @@ struct ExtExprF : ExprF<A> {
 	std::map<Variable_<A>, shared_ptr<A>> subst;
 };
 
-using Expr = Fix<ExtExprF>;
+template<typename A>
+struct F0 : ExtExprF<A> {
+	using ExtExprF<A>::ExtExprF;
+	typedef F0<A> tag;
+};
+
+template<typename A>
+struct F1 : ExtExprF<A> {
+	using ExtExprF<A>::ExtExprF;
+	typedef F1<A> tag;
+};
 
 // kényelmi függvények
-template<typename A = Expr>
-ExtExprF<A> Const(int val) { return Const_{ val }; }
+template<typename A = Fix<F0>>
+F0<A> Const(int val) { return Const_{ val }; }
 
 template<typename A>
-ExtExprF<A> Add(A a, A b) { return Add_<A>{a, b}; }
+F0<A> Add(A a, A b) { return Add_<A>{a, b}; }
 
 template<typename A>
-ExtExprF<A> Mul(A a, A b) { return Mul_<A>{a, b}; }
+F0<A> Mul(A a, A b) { return Mul_<A>{a, b}; }
 
 template<typename A>
-ExtExprF<A> App(A a, A b) { return App_<A>{a, b}; }
+F0<A> App(A a, A b) { return App_<A>{a, b}; }
 
 template<typename A>
-ExtExprF<A> Lam(A a) { return Lambda_<A>{a}; }
+F0<A> Lam(A a) { return Lambda_<A>{a}; }
 
-template<typename A = Expr>
-ExtExprF<A> Var() { 
+template<typename A = Fix<F0>>
+F0<A> Var() {
 	return Variable_<A>{ 'x',  make_shared<A>(Const_{ 6 }) };
 }
 

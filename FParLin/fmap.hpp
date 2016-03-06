@@ -43,8 +43,8 @@ struct functor_visitor<Fun, F<A>>
 		return Lambda_<B>(f_(e.body()), e.values, e.subst);
 	}
 
-	F<B> operator()(Variable_<A> e) const {
-		return Variable_<B>{ e.id, e.value };
+	F<B> operator()(Variable_ e) const {
+		return Variable_{ e.id, e.value };
 	}
 private:
 	Fun f_;

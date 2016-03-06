@@ -45,7 +45,7 @@ struct alg_visitor : boost::static_visitor<int> {
 		return e.body();
 	}
 
-	int operator()(Variable_<int> e) const {
+	int operator()(Variable_ e) const {
 		return cata(alg, *e.value);
 	}
 };

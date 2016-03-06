@@ -46,7 +46,7 @@ struct annotation_copy_visitor : boost::static_visitor<void> {
 		e.subst = subst;
 	}
 
-	void operator()(Variable_<Fix<F>>& e) const {
+	void operator()(Variable_& e) const {
 		e.value = subst.at(e.id);
 	}
 
@@ -90,7 +90,7 @@ struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 		return e;
 	}
 
-	F<Fix<F>> operator()(Variable_<Fix<F>> e) const {
+	F<Fix<F>> operator()(Variable_ e) const {
 		return e;
 	}
 };

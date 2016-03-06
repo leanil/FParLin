@@ -15,7 +15,7 @@ template<typename A> struct Add_;
 template<typename A> struct Mul_;
 template<typename A> struct App_;
 template<typename A> struct Lambda_;
-template<typename A> struct Variable_;
+struct Variable_;
 
 template<typename A>
 using ExprF_ =
@@ -25,7 +25,7 @@ boost::variant<
 	Mul_<A>,
 	App_<A>,
 	Lambda_<A>,
-	Variable_<A>
+	Variable_
 >;
 
 template<typename A>
@@ -36,7 +36,7 @@ struct F : ExprF_<A> {
 	F(Mul_<A> c) : ExprF_<A>(c) {}
 	F(App_<A> c) : ExprF_<A>(c) {}
 	F(Lambda_<A> c) : ExprF_<A>(c) {}
-	F(Variable_<A> c) : ExprF_<A>(c) {}
+	F(Variable_ c) : ExprF_<A>(c) {}
 };
 
 struct Const_ {
@@ -93,7 +93,6 @@ struct Lambda_ {
 	std::map<char, shared_ptr<Fix<F>>> subst;
 };
 
-template<typename A>
 struct Variable_ {
 	char id;
 	shared_ptr<Fix<F>> value;
@@ -116,4 +115,4 @@ template<typename A>
 F<A> Lam(A a) { return Lambda_<A>{a}; }
 
 template<typename A = Fix<F>>
-F<A> Var() { return Variable_<A>{ 'x' }; }
+F<A> Var() { return Variable_{ 'x' }; }

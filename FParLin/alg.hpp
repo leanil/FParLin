@@ -1,13 +1,12 @@
 #pragma once
 
 #include "expr.hpp"
+#include "fmap.hpp"
 #include <boost\variant\apply_visitor.hpp>
 #include <functional>
 #include <type_traits>
 
-// A horrible hack for the purpose of computing
-// cata's return type. AnyF<F> stands in for a F<T>
-// when T is unknown.
+//AnyF<F> stands in for a F<T> when T is unknown.
 template<template<typename> class F>
 struct AnyF {
 	template<typename T>
@@ -22,54 +21,7 @@ cata(Alg alg, Fix<F> o) {
 		unFix(o)));
 }
 
-template<typename Fun, typename Tag>
-struct functor_visitor;
-
-template<typename Fun, typename Fa>
-typename
-functor_visitor<Fun, typename Fa::tag>::result_type
-fmap(Fun f, Fa fa) {
-	return boost::apply_visitor(
-		functor_visitor<Fun, typename Fa::tag>{f}, fa);
-}
-
-//fmap: F0
-template<typename Fun, typename A>
-struct functor_visitor<Fun, F0<A>>
-	: boost::static_visitor <
-	F0<typename std::result_of<Fun(A)>::type >>
-{
-	typedef typename std::result_of<Fun(A)>::type B;
-
-	explicit functor_visitor(Fun f)
-		: f_(f) {}
-
-	F0<B> operator()(Const_ i) const {
-		return Const<B>(i.value);
-	}
-
-	F0<B> operator()(Add_<A> e) const {
-		return Add(f_(e.left()), f_(e.right()));
-	}
-
-	F0<B> operator()(Mul_<A> e) const {
-		return Mul(f_(e.left()), f_(e.right()));
-	}
-
-	F0<B> operator()(App_<A> e) const {
-		return App(f_(e.function()), f_(e.input()));
-	}
-
-	F0<B> operator()(Lambda_<A> e) const {
-		return Lam(f_(e.body()));
-	}
-
-	F0<B> operator()(Variable_<A> e) const {
-		return Variable_<B>{e.id, make_shared<B>(cata(alg, *e.val))};
-	}
-private:
-	Fun f_;
-};
+int alg(F<int>);
 
 struct alg_visitor : boost::static_visitor<int> {
 
@@ -94,10 +46,10 @@ struct alg_visitor : boost::static_visitor<int> {
 	}
 
 	int operator()(Variable_<int> e) const {
-		return *e.val;
+		return cata(alg, *e.value);
 	}
 };
 
-int alg(F0<int> e) {
+int alg(F<int> e) {
 	return boost::apply_visitor(alg_visitor(), e);
 }

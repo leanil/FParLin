@@ -1,4 +1,5 @@
 #include "alg.hpp"
+#include "coalg.hpp"
 #include "expr.hpp"
 #include "fix.hpp"
 #include <iostream>
@@ -8,7 +9,7 @@ using namespace std;
 
 int main() {
 	// (2+3)*4 == 20
-	Fix<F0> testExpr1 =
+	Fix<F> testExpr1 =
 		Fx(Mul(
 			Fx(Add(
 				Fx(Const(2)),
@@ -16,9 +17,9 @@ int main() {
 				)),
 			Fx(Const(4))
 			));
-	cout << cata(alg, testExpr1) << endl;
+	cout << cata(alg, ana(coalg, testExpr1)) << endl;
 
-	Fix<F0> testExpr2 =
+	Fix<F> testExpr2 =
 		Fx(Add(
 			Fx(App(
 				Fx(Lam(
@@ -27,5 +28,5 @@ int main() {
 						Fx(Var()))))),
 				Fx(Const(6)))),
 			Fx(Const(5))));
-	cout << cata(alg, testExpr2) << endl;
+	cout << cata(alg, ana(coalg, testExpr2)) << endl;
 }

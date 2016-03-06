@@ -22,11 +22,25 @@ int main() {
 	Fix<F> testExpr2 =
 		Fx(Add(
 			Fx(App(
-				Fx(Lam(
+				Fx(Lam('x',
 					Fx(Mul(
-						Fx(Var()),
-						Fx(Var()))))),
+						Fx(Var('x')),
+						Fx(Var('x')))))),
 				Fx(Const(6)))),
 			Fx(Const(5))));
 	cout << cata(alg, ana(coalg, testExpr2)) << endl;
+
+	Fix<F> testExpr3 =
+		Fx(App(
+			Fx(App(
+				Fx(Lam('x',
+					Fx(Lam('y',
+						Fx(Add(
+							Fx(Var('x')),
+							Fx(Var('y')))))))),
+				Fx(Const(5)))),
+			Fx(Mul(
+				Fx(Const(4)),
+				Fx(Const(3))))));
+	cout << cata(alg, ana(coalg, testExpr3)) << endl;
 }

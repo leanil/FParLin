@@ -46,51 +46,52 @@ struct Const_ {
 template<typename A>
 struct Add_ {
 	Add_(A left, A right) : left_(new A(left)), right_(new A(right)) {}
-	Add_(A left, A right, const std::stack<shared_ptr<Fix<F>>>& values, const std::map<char, shared_ptr<Fix<F>>>& subst):
+	Add_(A left, A right, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
 		left_(new A(left)), right_(new A(right)), values{ values }, subst{ subst } {}
 	A& left() { return *left_; }
 	A& right() { return *right_; }
 	shared_ptr<A> left_;
 	shared_ptr<A> right_;
-	std::stack<shared_ptr<Fix<F>>> values;
-	std::map<char, shared_ptr<Fix<F>>> subst;
+	stack<shared_ptr<Fix<F>>> values;
+	map<char, shared_ptr<Fix<F>>> subst;
 };
 
 template<typename A>
 struct Mul_ {
 	Mul_(A left, A right) : left_(new A(left)), right_(new A(right)) {}
-	Mul_(A left, A right, const std::stack<shared_ptr<Fix<F>>>& values, const std::map<char, shared_ptr<Fix<F>>>& subst) :
+	Mul_(A left, A right, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
 		left_(new A(left)), right_(new A(right)), values{ values }, subst{ subst } {}
 	A& left() { return *left_; }
 	A& right() { return *right_; }
 	shared_ptr<A> left_;
 	shared_ptr<A> right_;
-	std::stack<shared_ptr<Fix<F>>> values;
-	std::map<char, shared_ptr<Fix<F>>> subst;
+	stack<shared_ptr<Fix<F>>> values;
+	map<char, shared_ptr<Fix<F>>> subst;
 };
 
 template<typename A>
 struct App_ {
 	App_(A function, A input) : function_(new A(function)), input_(new A(input)) {}
-	App_(A function, A input, const std::stack<shared_ptr<Fix<F>>>& values, const std::map<char, shared_ptr<Fix<F>>>& subst) :
+	App_(A function, A input, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
 		function_(new A(function)), input_(new A(input)), values{ values }, subst{ subst } {}
 	A& function() { return *function_; }
 	A& input() { return *input_; }
 	shared_ptr<A> function_;
 	shared_ptr<A> input_;
-	std::stack<shared_ptr<Fix<F>>> values;
-	std::map<char, shared_ptr<Fix<F>>> subst;
+	stack<shared_ptr<Fix<F>>> values;
+	map<char, shared_ptr<Fix<F>>> subst;
 };
 
 template<typename A>
 struct Lambda_ {
-	Lambda_(A body) : body_(new A(body)) {}
-	Lambda_(A body, const std::stack<shared_ptr<Fix<F>>>& values, const std::map<char, shared_ptr<Fix<F>>>& subst) :
-		body_(new A(body)), values{ values }, subst{ subst } {}
+	Lambda_(A body, char id) : body_(new A(body)), id{ id } {}
+	Lambda_(A body, char id, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
+		body_(new A(body)), id{ id }, values{ values }, subst{ subst } {}
 	A& body() { return *body_; }
 	shared_ptr<A> body_;
-	std::stack<shared_ptr<Fix<F>>> values;
-	std::map<char, shared_ptr<Fix<F>>> subst;
+	char id;
+	stack<shared_ptr<Fix<F>>> values;
+	map<char, shared_ptr<Fix<F>>> subst;
 };
 
 struct Variable_ {
@@ -103,16 +104,16 @@ template<typename A = Fix<F>>
 F<A> Const(int val) { return Const_{ val }; }
 
 template<typename A>
-F<A> Add(A a, A b) { return Add_<A>{a, b}; }
+F<A> Add(A a, A b) { return Add_<A>(a, b); }
 
 template<typename A>
-F<A> Mul(A a, A b) { return Mul_<A>{a, b}; }
+F<A> Mul(A a, A b) { return Mul_<A>(a, b); }
 
 template<typename A>
-F<A> App(A a, A b) { return App_<A>{a, b}; }
+F<A> App(A a, A b) { return App_<A>(a, b); }
 
 template<typename A>
-F<A> Lam(A a) { return Lambda_<A>{a}; }
+F<A> Lam(char id, A a) { return Lambda_<A>(a, id); }
 
 template<typename A = Fix<F>>
-F<A> Var() { return Variable_{ 'x' }; }
+F<A> Var(char id) { return Variable_{ id }; }

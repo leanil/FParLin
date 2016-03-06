@@ -40,7 +40,7 @@ struct functor_visitor<Fun, F<A>>
 	}
 
 	F<B> operator()(Lambda_<A> e) const {
-		return Lambda_<B>(f_(e.body()), e.values, e.subst);
+		return Lambda_<B>(f_(e.body()), e.id, e.values, e.subst);
 	}
 
 	F<B> operator()(Variable_ e) const {

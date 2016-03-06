@@ -83,7 +83,7 @@ struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 	}
 
 	F<Fix<F>> operator()(Lambda_<Fix<F>> e) const {
-		e.subst['x'] = e.values.top();
+		e.subst[e.id] = e.values.top();
 		e.values.pop();
 		annotation_copy_visitor copy(e.values, e.subst);
 		boost::apply_visitor(copy, *static_cast<F<Fix<F>>*>(e.body_.get()));

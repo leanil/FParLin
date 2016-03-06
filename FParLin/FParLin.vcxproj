@@ -129,6 +129,7 @@
     <ClInclude Include="coalg.hpp" />
     <ClInclude Include="fix.hpp" />
     <ClInclude Include="fmap.hpp" />
+    <ClInclude Include="test.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="expr.hpp" />

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fix.hpp"
-#include <boost\variant\variant.hpp>
+#include <boost/variant/variant.hpp>
 #include <map>
 #include <memory>
 #include <stack>
@@ -101,7 +101,7 @@ struct Variable_ {
 
 // kényelmi függvények
 template<typename A = Fix<F>>
-F<A> Const(int val) { return Scalar_{ val }; }
+F<A> Scl(int val) { return Scalar_{ val }; }
 
 template<typename A>
 F<A> Add(A a, A b) { return Add_<A>(a, b); }

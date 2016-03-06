@@ -1,8 +1,9 @@
 #pragma once
 
+#include "const.hpp"
 #include "expr.hpp"
 #include "fmap.hpp"
-#include <boost\variant\apply_visitor.hpp>
+#include <boost/variant/apply_visitor.hpp>
 #include <functional>
 #include <type_traits>
 
@@ -21,35 +22,35 @@ cata(Alg alg, Fix<F> o) {
 		unFix(o)));
 }
 
-int alg(F<int>);
+Const alg(F<Const>);
 
-struct alg_visitor : boost::static_visitor<int> {
+struct alg_visitor : boost::static_visitor<Const> {
 
-	int operator()(Scalar_ i) const {
+	Const operator()(Scalar_ i) const {
 		return i.value;
 	}
 
-	int operator()(Add_<int> e) const {
+	Const operator()(Add_<Const> e) const {
 		return e.left() + e.right();
 	}
 
-	int operator()(Mul_<int> e) const {
+	Const operator()(Mul_<Const> e) const {
 		return e.left() * e.right();
 	}
 
-	int operator()(App_<int> e) const {
+	Const operator()(App_<Const> e) const {
 		return e.function();
 	}
 
-	int operator()(Lambda_<int> e) const {
+	Const operator()(Lambda_<Const> e) const {
 		return e.body();
 	}
 
-	int operator()(Variable_ e) const {
+	Const operator()(Variable_ e) const {
 		return cata(alg, *e.value);
 	}
 };
 
-int alg(F<int> e) {
+Const alg(F<Const> e) {
 	return boost::apply_visitor(alg_visitor(), e);
 }

@@ -30,6 +30,9 @@
     <ClInclude Include="test.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="const.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

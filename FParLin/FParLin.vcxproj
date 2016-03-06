@@ -127,6 +127,7 @@
   <ItemGroup>
     <ClInclude Include="alg.hpp" />
     <ClInclude Include="coalg.hpp" />
+    <ClInclude Include="const.hpp" />
     <ClInclude Include="fix.hpp" />
     <ClInclude Include="fmap.hpp" />
     <ClInclude Include="test.hpp" />

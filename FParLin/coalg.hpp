@@ -62,23 +62,23 @@ struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 
 	F<Fix<F>> operator()(Add_<Fix<F>> e) const {
 		annotation_copy_visitor copy(e.values, e.subst);
-		boost::apply_visitor(copy, *static_cast<F<Fix<F>>*>(e.left_.get()));
-		boost::apply_visitor(copy, *static_cast<F<Fix<F>>*>(e.right_.get()));
+		boost::apply_visitor(copy, e.left());
+		boost::apply_visitor(copy, e.right());
 		return e;
 	}
 
 	F<Fix<F>> operator()(Mul_<Fix<F>> e) const {
 		annotation_copy_visitor copy(e.values, e.subst);
-		boost::apply_visitor(copy, *static_cast<F<Fix<F>>*>(e.left_.get()));
-		boost::apply_visitor(copy, *static_cast<F<Fix<F>>*>(e.right_.get()));
+		boost::apply_visitor(copy, e.left());
+		boost::apply_visitor(copy, e.right());
 		return e;
 	}
 
 	F<Fix<F>> operator()(App_<Fix<F>> e) const {
 		annotation_copy_visitor copy(e.values, e.subst);
-		boost::apply_visitor(copy, *static_cast<F<Fix<F>>*>(e.input_.get()));
+		boost::apply_visitor(copy, e.input());
 		e.values.push(e.input_);
-		boost::apply_visitor(copy, *static_cast<F<Fix<F>>*>(e.function_.get()));
+		boost::apply_visitor(copy, e.function());
 		return e;
 	}
 
@@ -86,7 +86,7 @@ struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 		e.subst[e.id] = e.values.top();
 		e.values.pop();
 		annotation_copy_visitor copy(e.values, e.subst);
-		boost::apply_visitor(copy, *static_cast<F<Fix<F>>*>(e.body_.get()));
+		boost::apply_visitor(copy, e.body());
 		return e;
 	}
 

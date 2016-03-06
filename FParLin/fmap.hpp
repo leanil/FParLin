@@ -23,8 +23,8 @@ struct functor_visitor<Fun, F<A>>
 
 	explicit functor_visitor(Fun f) : f_(f) {}
 
-	F<B> operator()(Const_ i) const {
-		return Const_{ i.value };
+	F<B> operator()(Scalar_ i) const {
+		return Scalar_{ i.value };
 	}
 
 	F<B> operator()(Add_<A> e) const {

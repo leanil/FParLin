@@ -24,7 +24,7 @@ struct annotation_copy_visitor : boost::static_visitor<void> {
 	annotation_copy_visitor(const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst):
 		values{ values }, subst{ subst } {}
 
-	void operator()(Const_& i) const {}
+	void operator()(Scalar_& i) const {}
 
 	void operator()(Add_<Fix<F>>& e) const {
 		e.values = values;
@@ -56,8 +56,8 @@ struct annotation_copy_visitor : boost::static_visitor<void> {
 
 struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 
-	F<Fix<F>> operator()(Const_ i) const {
-		return Const_{ i.value };
+	F<Fix<F>> operator()(Scalar_ i) const {
+		return Scalar_{ i.value };
 	}
 
 	F<Fix<F>> operator()(Add_<Fix<F>> e) const {

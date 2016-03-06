@@ -25,7 +25,7 @@ int alg(F<int>);
 
 struct alg_visitor : boost::static_visitor<int> {
 
-	int operator()(Const_ i) const {
+	int operator()(Scalar_ i) const {
 		return i.value;
 	}
 

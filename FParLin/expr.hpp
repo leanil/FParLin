@@ -10,7 +10,7 @@
 
 using namespace std;
 
-struct Const_;
+struct Scalar_;
 template<typename A> struct Add_;
 template<typename A> struct Mul_;
 template<typename A> struct App_;
@@ -20,7 +20,7 @@ struct Variable_;
 template<typename A>
 using ExprF_ =
 boost::variant<
-	Const_,
+	Scalar_,
 	Add_<A>,
 	Mul_<A>,
 	App_<A>,
@@ -31,7 +31,7 @@ boost::variant<
 template<typename A>
 struct F : ExprF_<A> {
 	typedef F<A> tag;
-	F(Const_ c) : ExprF_<A>(c) {}
+	F(Scalar_ c) : ExprF_<A>(c) {}
 	F(Add_<A> c) : ExprF_<A>(c) {}
 	F(Mul_<A> c) : ExprF_<A>(c) {}
 	F(App_<A> c) : ExprF_<A>(c) {}
@@ -39,7 +39,7 @@ struct F : ExprF_<A> {
 	F(Variable_ c) : ExprF_<A>(c) {}
 };
 
-struct Const_ {
+struct Scalar_ {
 	int value;
 };
 
@@ -101,7 +101,7 @@ struct Variable_ {
 
 // kényelmi függvények
 template<typename A = Fix<F>>
-F<A> Const(int val) { return Const_{ val }; }
+F<A> Const(int val) { return Scalar_{ val }; }
 
 template<typename A>
 F<A> Add(A a, A b) { return Add_<A>(a, b); }

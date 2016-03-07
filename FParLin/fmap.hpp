@@ -45,7 +45,7 @@ struct functor_visitor<Fun, F<A>>
 	}
 
 	F<B> operator()(Apply<A> e) const {
-		return Apply<B>(f(e.function()), f(e.input()), e.values, e.subst);
+		return Apply<B>(f(e.lambda()), f(e.input()), e.values, e.subst);
 	}
 
 	F<B> operator()(Lambda<A> e) const {
@@ -54,6 +54,10 @@ struct functor_visitor<Fun, F<A>>
 
 	F<B> operator()(Variable e) const {
 		return Variable{ e.id, e.value };
+	}
+
+	F<B> operator()(Map<A> e) const {
+		return Map<B>(f(e.lambda()), f(e.vector()), e.values, e.subst);
 	}
 private:
 	Fun f;

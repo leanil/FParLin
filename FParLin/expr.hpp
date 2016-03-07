@@ -20,6 +20,7 @@ template<typename A> struct Multiplication;
 template<typename A> struct Apply;
 template<typename A> struct Lambda;
 struct Variable;
+template<typename A> struct Map;
 
 template<typename A>
 using ExprF =
@@ -30,7 +31,8 @@ boost::variant<
 	Multiplication<A>,
 	Apply<A>,
 	Lambda<A>,
-	Variable
+	Variable,
+	Map<A>
 >;
 
 template<typename A>
@@ -43,6 +45,7 @@ struct F : ExprF<A> {
 	F(Apply<A> c) : ExprF<A>(c) {}
 	F(Lambda<A> c) : ExprF<A>(c) {}
 	F(Variable c) : ExprF<A>(c) {}
+	F(Map<A> c) : ExprF<A>(c) {}
 };
 
 struct Scalar {
@@ -100,12 +103,12 @@ struct Multiplication {
 
 template<typename A>
 struct Apply {
-	Apply(A function, A input) : function_(new A(function)), input_(new A(input)) {}
-	Apply(A function, A input, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
-		function_(new A(function)), input_(new A(input)), values{ values }, subst{ subst } {}
-	A& function() { return *function_; }
+	Apply(A lambda, A input) : lambda_(new A(lambda)), input_(new A(input)) {}
+	Apply(A lambda, A input, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
+		lambda_(new A(lambda)), input_(new A(input)), values{ values }, subst{ subst } {}
+	A& lambda() { return *lambda_; }
 	A& input() { return *input_; }
-	shared_ptr<A> function_;
+	shared_ptr<A> lambda_;
 	shared_ptr<A> input_;
 	stack<shared_ptr<Fix<F>>> values;
 	map<char, shared_ptr<Fix<F>>> subst;
@@ -126,6 +129,19 @@ struct Lambda {
 struct Variable {
 	char id;
 	shared_ptr<Fix<F>> value;
+};
+
+template<typename A>
+struct Map {
+	Map(A lambda, A vector) : lambda_(new A(lambda)), vector_(new A(vector)) {}
+	Map(A lambda, A vector, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
+		lambda_(new A(lambda)), vector_(new A(vector)), values{ values }, subst{ subst } {}
+	A& lambda() { return *lambda_; }
+	A& vector() { return *vector_; }
+	shared_ptr<A> lambda_;
+	shared_ptr<A> vector_;
+	stack<shared_ptr<Fix<F>>> values;
+	map<char, shared_ptr<Fix<F>>> subst;
 };
 
 // kényelmi függvények
@@ -149,3 +165,6 @@ F<A> Lam(char id, A a) { return Lambda<A>(a, id); }
 
 template<typename A = Fix<F>>
 F<A> Var(char id) { return Variable{ id }; }
+
+template<typename A>
+F<A> map(A a, A b) { return Map<A>(a, b); }

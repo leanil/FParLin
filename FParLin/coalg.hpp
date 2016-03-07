@@ -91,7 +91,7 @@ struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 		annotation_copy_visitor copy(e.values, e.subst);
 		boost::apply_visitor(copy, e.input());
 		e.values.push(e.input_);
-		boost::apply_visitor(copy, e.function());
+		boost::apply_visitor(copy, e.lambda());
 		return e;
 	}
 

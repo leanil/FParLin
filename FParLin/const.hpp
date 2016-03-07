@@ -8,7 +8,21 @@
 
 using namespace std;
 
-using Const = boost::variant<int, vector<int>>;
+using Const_ = boost::variant<int, vector<int>>;
+
+struct Const : Const_ {
+	Const() : Const_{ 0 } {}
+	Const(int a) : Const_(a) {}
+	Const(vector<int> a) : Const_(a) {}
+
+	explicit operator int() {
+		return boost::get<int>(*this);
+	}
+
+	explicit operator vector<int>() {
+		return boost::get<vector<int>>(*this);
+	}
+};
 
 Const operator+(const Const& a, const Const& b) {
 	return boost::get<int>(a) + boost::get<int>(b);
@@ -16,14 +30,6 @@ Const operator+(const Const& a, const Const& b) {
 
 Const operator*(const Const& a, const Const& b) {
 	return boost::get<int>(a) * boost::get<int>(b);
-}
-
-bool operator==(const Const& c, int i) {
-	return boost::get<int>(c) == i;
-}
-
-bool operator==(const Const& c, const vector<int>& v) {
-	return boost::get<vector<int>>(c) == v;
 }
 
 struct const_printer : boost::static_visitor<void> {

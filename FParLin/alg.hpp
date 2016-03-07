@@ -4,8 +4,10 @@
 #include "expr.hpp"
 #include "fmap.hpp"
 #include <boost/variant/apply_visitor.hpp>
+#include <algorithm>
 #include <functional>
 #include <type_traits>
+#include <vector>
 
 //AnyF<F> stands in for a F<T> when T is unknown.
 template<template<typename> class F>
@@ -26,27 +28,33 @@ Const alg(F<Const>);
 
 struct alg_visitor : boost::static_visitor<Const> {
 
-	Const operator()(Scalar_ i) const {
+	Const operator()(Scalar i) const {
 		return i.value;
 	}
 
-	Const operator()(Add_<Const> e) const {
+	Const operator()(Vector<Const> e) const {
+		vector<int> tmp(e.elements.size());
+		transform(e.elements.begin(), e.elements.end(), tmp.begin(), [](shared_ptr<Const> c) {return (int)*c; });
+		return tmp;
+	}
+
+	Const operator()(Addition<Const> e) const {
 		return e.left() + e.right();
 	}
 
-	Const operator()(Mul_<Const> e) const {
+	Const operator()(Multiplication<Const> e) const {
 		return e.left() * e.right();
 	}
 
-	Const operator()(App_<Const> e) const {
+	Const operator()(Apply<Const> e) const {
 		return e.function();
 	}
 
-	Const operator()(Lambda_<Const> e) const {
+	Const operator()(Lambda<Const> e) const {
 		return e.body();
 	}
 
-	Const operator()(Variable_ e) const {
+	Const operator()(Variable e) const {
 		return cata(alg, *e.value);
 	}
 };

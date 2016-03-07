@@ -2,51 +2,80 @@
 
 #include "fix.hpp"
 #include <boost/variant/variant.hpp>
+#include <algorithm>
+#include <initializer_list>
 #include <map>
 #include <memory>
 #include <stack>
+#include <vector>
 
 #include <iostream>
 
 using namespace std;
 
-struct Scalar_;
-template<typename A> struct Add_;
-template<typename A> struct Mul_;
-template<typename A> struct App_;
-template<typename A> struct Lambda_;
-struct Variable_;
+struct Scalar;
+template<typename A> struct Vector;
+template<typename A> struct Addition;
+template<typename A> struct Multiplication;
+template<typename A> struct Apply;
+template<typename A> struct Lambda;
+struct Variable;
 
 template<typename A>
-using ExprF_ =
+using ExprF =
 boost::variant<
-	Scalar_,
-	Add_<A>,
-	Mul_<A>,
-	App_<A>,
-	Lambda_<A>,
-	Variable_
+	Scalar,
+	Vector<A>,
+	Addition<A>,
+	Multiplication<A>,
+	Apply<A>,
+	Lambda<A>,
+	Variable
 >;
 
 template<typename A>
-struct F : ExprF_<A> {
+struct F : ExprF<A> {
 	typedef F<A> tag;
-	F(Scalar_ c) : ExprF_<A>(c) {}
-	F(Add_<A> c) : ExprF_<A>(c) {}
-	F(Mul_<A> c) : ExprF_<A>(c) {}
-	F(App_<A> c) : ExprF_<A>(c) {}
-	F(Lambda_<A> c) : ExprF_<A>(c) {}
-	F(Variable_ c) : ExprF_<A>(c) {}
+	F(Scalar c) : ExprF<A>(c) {}
+	F(Vector<A> c) : ExprF<A>(c) {}
+	F(Addition<A> c) : ExprF<A>(c) {}
+	F(Multiplication<A> c) : ExprF<A>(c) {}
+	F(Apply<A> c) : ExprF<A>(c) {}
+	F(Lambda<A> c) : ExprF<A>(c) {}
+	F(Variable c) : ExprF<A>(c) {}
 };
 
-struct Scalar_ {
+struct Scalar {
 	int value;
 };
 
 template<typename A>
-struct Add_ {
-	Add_(A left, A right) : left_(new A(left)), right_(new A(right)) {}
-	Add_(A left, A right, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
+struct Vector {
+	Vector(initializer_list<A> elem,
+		const stack<shared_ptr<Fix<F>>>& values = stack<shared_ptr<Fix<F>>>(),
+		const map<char, shared_ptr<Fix<F>>>& subst = map<char, shared_ptr<Fix<F>>>()) :
+		values{ values }, subst{ subst }
+	{
+		elements.resize(elem.size());
+		transform(elem.begin(), elem.end(), elements.begin(), [](A a) {return make_shared<A>(a); });
+	}
+
+	Vector(vector<A> elem, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
+		values{ values }, subst{ subst }
+	{
+		elements.resize(elem.size());
+		transform(elem.begin(), elem.end(), elements.begin(), [](A a) {return make_shared<A>(a); });
+	}
+
+	vector<shared_ptr<A>> elements;
+	stack<shared_ptr<Fix<F>>> values;
+	map<char, shared_ptr<Fix<F>>> subst;
+};
+
+template<typename A>
+struct Addition {
+	Addition(A left, A right) : left_(new A(left)), right_(new A(right)) {}
+	Addition(A left, A right, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
 		left_(new A(left)), right_(new A(right)), values{ values }, subst{ subst } {}
 	A& left() { return *left_; }
 	A& right() { return *right_; }
@@ -57,9 +86,9 @@ struct Add_ {
 };
 
 template<typename A>
-struct Mul_ {
-	Mul_(A left, A right) : left_(new A(left)), right_(new A(right)) {}
-	Mul_(A left, A right, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
+struct Multiplication {
+	Multiplication(A left, A right) : left_(new A(left)), right_(new A(right)) {}
+	Multiplication(A left, A right, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
 		left_(new A(left)), right_(new A(right)), values{ values }, subst{ subst } {}
 	A& left() { return *left_; }
 	A& right() { return *right_; }
@@ -70,9 +99,9 @@ struct Mul_ {
 };
 
 template<typename A>
-struct App_ {
-	App_(A function, A input) : function_(new A(function)), input_(new A(input)) {}
-	App_(A function, A input, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
+struct Apply {
+	Apply(A function, A input) : function_(new A(function)), input_(new A(input)) {}
+	Apply(A function, A input, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
 		function_(new A(function)), input_(new A(input)), values{ values }, subst{ subst } {}
 	A& function() { return *function_; }
 	A& input() { return *input_; }
@@ -83,9 +112,9 @@ struct App_ {
 };
 
 template<typename A>
-struct Lambda_ {
-	Lambda_(A body, char id) : body_(new A(body)), id{ id } {}
-	Lambda_(A body, char id, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
+struct Lambda {
+	Lambda(A body, char id) : body_(new A(body)), id{ id } {}
+	Lambda(A body, char id, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
 		body_(new A(body)), id{ id }, values{ values }, subst{ subst } {}
 	A& body() { return *body_; }
 	shared_ptr<A> body_;
@@ -94,26 +123,29 @@ struct Lambda_ {
 	map<char, shared_ptr<Fix<F>>> subst;
 };
 
-struct Variable_ {
+struct Variable {
 	char id;
 	shared_ptr<Fix<F>> value;
 };
 
 // kényelmi függvények
 template<typename A = Fix<F>>
-F<A> Scl(int val) { return Scalar_{ val }; }
+F<A> Scl(int val) { return Scalar{ val }; }
 
 template<typename A>
-F<A> Add(A a, A b) { return Add_<A>(a, b); }
+F<A> Vec(initializer_list<A> a) { return Vector<A>(a); }
 
 template<typename A>
-F<A> Mul(A a, A b) { return Mul_<A>(a, b); }
+F<A> Add(A a, A b) { return Addition<A>(a, b); }
 
 template<typename A>
-F<A> App(A a, A b) { return App_<A>(a, b); }
+F<A> Mul(A a, A b) { return Multiplication<A>(a, b); }
 
 template<typename A>
-F<A> Lam(char id, A a) { return Lambda_<A>(a, id); }
+F<A> App(A a, A b) { return Apply<A>(a, b); }
+
+template<typename A>
+F<A> Lam(char id, A a) { return Lambda<A>(a, id); }
 
 template<typename A = Fix<F>>
-F<A> Var(char id) { return Variable_{ id }; }
+F<A> Var(char id) { return Variable{ id }; }

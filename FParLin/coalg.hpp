@@ -24,29 +24,34 @@ struct annotation_copy_visitor : boost::static_visitor<void> {
 	annotation_copy_visitor(const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst):
 		values{ values }, subst{ subst } {}
 
-	void operator()(Scalar_& i) const {}
+	void operator()(Scalar& i) const {}
 
-	void operator()(Add_<Fix<F>>& e) const {
+	void operator()(Vector<Fix<F>>& e) const {
 		e.values = values;
 		e.subst = subst;
 	}
 
-	void operator()(Mul_<Fix<F>>& e) const {
+	void operator()(Addition<Fix<F>>& e) const {
 		e.values = values;
 		e.subst = subst;
 	}
 
-	void operator()(App_<Fix<F>>& e) const {
+	void operator()(Multiplication<Fix<F>>& e) const {
 		e.values = values;
 		e.subst = subst;
 	}
 
-	void operator()(Lambda_<Fix<F>>& e) const {
+	void operator()(Apply<Fix<F>>& e) const {
 		e.values = values;
 		e.subst = subst;
 	}
 
-	void operator()(Variable_& e) const {
+	void operator()(Lambda<Fix<F>>& e) const {
+		e.values = values;
+		e.subst = subst;
+	}
+
+	void operator()(Variable& e) const {
 		e.value = subst.at(e.id);
 	}
 
@@ -56,25 +61,33 @@ struct annotation_copy_visitor : boost::static_visitor<void> {
 
 struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 
-	F<Fix<F>> operator()(Scalar_ i) const {
-		return Scalar_{ i.value };
+	F<Fix<F>> operator()(Scalar i) const {
+		return Scalar{ i.value };
 	}
 
-	F<Fix<F>> operator()(Add_<Fix<F>> e) const {
+	F<Fix<F>> operator()(Vector<Fix<F>> e) const {
+		annotation_copy_visitor copy(e.values, e.subst);
+		for (auto element : e.elements) {
+			boost::apply_visitor(copy, *element);
+		}
+		return e;
+	}
+
+	F<Fix<F>> operator()(Addition<Fix<F>> e) const {
 		annotation_copy_visitor copy(e.values, e.subst);
 		boost::apply_visitor(copy, e.left());
 		boost::apply_visitor(copy, e.right());
 		return e;
 	}
 
-	F<Fix<F>> operator()(Mul_<Fix<F>> e) const {
+	F<Fix<F>> operator()(Multiplication<Fix<F>> e) const {
 		annotation_copy_visitor copy(e.values, e.subst);
 		boost::apply_visitor(copy, e.left());
 		boost::apply_visitor(copy, e.right());
 		return e;
 	}
 
-	F<Fix<F>> operator()(App_<Fix<F>> e) const {
+	F<Fix<F>> operator()(Apply<Fix<F>> e) const {
 		annotation_copy_visitor copy(e.values, e.subst);
 		boost::apply_visitor(copy, e.input());
 		e.values.push(e.input_);
@@ -82,7 +95,7 @@ struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 		return e;
 	}
 
-	F<Fix<F>> operator()(Lambda_<Fix<F>> e) const {
+	F<Fix<F>> operator()(Lambda<Fix<F>> e) const {
 		e.subst[e.id] = e.values.top();
 		e.values.pop();
 		annotation_copy_visitor copy(e.values, e.subst);
@@ -90,7 +103,7 @@ struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 		return e;
 	}
 
-	F<Fix<F>> operator()(Variable_ e) const {
+	F<Fix<F>> operator()(Variable e) const {
 		return e;
 	}
 };

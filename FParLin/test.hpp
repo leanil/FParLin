@@ -82,7 +82,7 @@ Fx(Map(
 							Fx(Var('b')),
 							Fx(Var('c')))))))),
 				Fx(Var('a')),
-				Fx(Vec({ Fx(Scl(7)), Fx(Scl(8)), Fx(Scl(9)) })))),
+				Fx(VecView("vec")))),
 			Fx(Scl(0)))))),
 	Fx(Vec({
 		Fx(Vec({ Fx(Scl(1)), Fx(Scl(2)), Fx(Scl(3)) })),

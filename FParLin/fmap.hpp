@@ -30,6 +30,10 @@ struct functor_visitor<Fun, F<A>>
 		return Scalar{ e.value };
 	}
 
+	F<B> operator()(VectorView e) const {
+		return VectorView{ e.id, e.vector };
+	}
+
 	F<B> operator()(Vector<A> e) const {
 		vector<B> tmp;
 		transform(e.elements.begin(), e.elements.end(), back_inserter(tmp), [&](shared_ptr<A> a) {return f(*a); });

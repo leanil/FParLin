@@ -32,6 +32,10 @@ struct alg_visitor : boost::static_visitor<string> {
 		return to_string(i.value);
 	}
 
+	string operator()(VectorView i) const {
+		return "*bigVectors.at(\"" + i.id + "\")";
+	}
+
 	string operator()(Vector<string> e) const {
 		string tmp = "make_vector({";
 		for (auto element : e.elements) {

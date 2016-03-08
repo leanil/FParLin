@@ -33,8 +33,8 @@ struct alg_visitor : boost::static_visitor<Const> {
 	}
 
 	Const operator()(Vector<Const> e) const {
-		vector<int> tmp(e.elements.size());
-		transform(e.elements.begin(), e.elements.end(), tmp.begin(), [](shared_ptr<Const> c) {return (int)*c; });
+		vector<double> tmp(e.elements.size());
+		transform(e.elements.begin(), e.elements.end(), tmp.begin(), [](shared_ptr<Const> c) {return (double)*c; });
 		return tmp;
 	}
 

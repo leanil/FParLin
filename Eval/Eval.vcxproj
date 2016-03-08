@@ -149,6 +149,9 @@
     <ClCompile Include="fparlin.hpp" />
     <ClCompile Include="result.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="config.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

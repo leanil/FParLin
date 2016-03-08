@@ -14,6 +14,7 @@
 using namespace std;
 
 struct Scalar;
+struct VectorView;
 template<typename A> struct Vector;
 template<typename A> struct Addition;
 template<typename A> struct Multiplication;
@@ -28,6 +29,7 @@ template<typename A>
 using ExprF =
 boost::variant<
 	Scalar,
+	VectorView,
 	Vector<A>,
 	Addition<A>,
 	Multiplication<A>,
@@ -43,6 +45,7 @@ template<typename A>
 struct F : ExprF<A> {
 	typedef F<A> tag;
 	F(Scalar c) : ExprF<A>(c) {}
+	F(VectorView c) : ExprF<A>(c) {}
 	F(Vector<A> c) : ExprF<A>(c) {}
 	F(Addition<A> c) : ExprF<A>(c) {}
 	F(Multiplication<A> c) : ExprF<A>(c) {}
@@ -55,7 +58,14 @@ struct F : ExprF<A> {
 };
 
 struct Scalar {
-	int value;
+	double value;
+};
+
+using BigVector = vector<double>;
+
+struct VectorView {
+	string id;
+	BigVector* vector;
 };
 
 template<typename A>
@@ -182,7 +192,10 @@ struct Zip_ {
 
 // kényelmi függvények
 template<typename A = Fix<F>>
-F<A> Scl(int val) { return Scalar{ val }; }
+F<A> Scl(double val) { return Scalar{ val }; }
+
+template<typename A = Fix<F>>
+F<A> VecView(string name, BigVector* vector = nullptr) { return VectorView{ name, vector }; }
 
 template<typename A>
 F<A> Vec(initializer_list<A> a) { return Vector<A>(a); }

@@ -55,6 +55,11 @@ struct annotation_copy_visitor : boost::static_visitor<void> {
 		e.value = subst.at(e.id);
 	}
 
+	void operator()(Map_<Fix<F>>& e) const {
+		e.values = values;
+		e.subst = subst;
+	}
+
 	const stack<shared_ptr<Fix<F>>>& values;
 	const map<char, shared_ptr<Fix<F>>>& subst;
 };
@@ -91,7 +96,7 @@ struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 		annotation_copy_visitor copy(e.values, e.subst);
 		boost::apply_visitor(copy, e.input());
 		e.values.push(e.input_);
-		boost::apply_visitor(copy, e.function());
+		boost::apply_visitor(copy, e.lambda());
 		return e;
 	}
 
@@ -104,6 +109,11 @@ struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 	}
 
 	F<Fix<F>> operator()(Variable e) const {
+		return e;
+	}
+
+	F<Fix<F>> operator()(Map_<Fix<F>> e) const {
+		//TODO: Inplace evaluation not implemented.
 		return e;
 	}
 };

@@ -51,7 +51,7 @@ struct alg_visitor : boost::static_visitor<string> {
 	}
 
 	string operator()(Apply<string> e) const {
-		return e.function() + '(' + e.input() + ')';
+		return e.lambda() + '(' + e.input() + ')';
 	}
 
 	string operator()(Lambda<string> e) const {
@@ -60,6 +60,10 @@ struct alg_visitor : boost::static_visitor<string> {
 
 	string operator()(Variable e) const {
 		return string(1,e.id);
+	}
+
+	string operator()(Map_<string> e) const {
+		return "Map(" + e.lambda() + "," + e.vector() + ")";
 	}
 };
 

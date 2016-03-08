@@ -47,7 +47,7 @@ struct alg_visitor : boost::static_visitor<Const> {
 	}
 
 	Const operator()(Apply<Const> e) const {
-		return e.function();
+		return e.lambda();
 	}
 
 	Const operator()(Lambda<Const> e) const {
@@ -56,6 +56,11 @@ struct alg_visitor : boost::static_visitor<Const> {
 
 	Const operator()(Variable e) const {
 		return cata(alg, *e.value);
+	}
+
+	Const operator()(Map_<Const> e) const {
+		//TODO: Inplace evaluation not implemented.
+		return;
 	}
 };
 

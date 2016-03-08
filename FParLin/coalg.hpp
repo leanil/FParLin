@@ -60,6 +60,15 @@ struct annotation_copy_visitor : boost::static_visitor<void> {
 		e.subst = subst;
 	}
 
+	void operator()(Fold_<Fix<F>>& e) const {
+		e.values = values;
+		e.subst = subst;
+	}
+	void operator()(Zip_<Fix<F>>& e) const {
+		e.values = values;
+		e.subst = subst;
+	}
+
 	const stack<shared_ptr<Fix<F>>>& values;
 	const map<char, shared_ptr<Fix<F>>>& subst;
 };
@@ -113,6 +122,16 @@ struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 	}
 
 	F<Fix<F>> operator()(Map_<Fix<F>> e) const {
+		//TODO: Inplace evaluation not implemented.
+		return e;
+	}
+
+	F<Fix<F>> operator()(Fold_<Fix<F>> e) const {
+		//TODO: Inplace evaluation not implemented.
+		return e;
+	}
+
+	F<Fix<F>> operator()(Zip_<Fix<F>> e) const {
 		//TODO: Inplace evaluation not implemented.
 		return e;
 	}

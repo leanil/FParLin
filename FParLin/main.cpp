@@ -10,5 +10,6 @@ int main() {
 	out << "\tstd::cout << " << test2() << " << std::endl;\n";
 	out << "\tstd::cout << " << test4() << " << std::endl;\n";
 	out << "\tstd::cout << " << test5() << " << std::endl;\n";
+	out << "\tstd::cout << " << test6() << " << std::endl;\n";
 	out << "}";
 }

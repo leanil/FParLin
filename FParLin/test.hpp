@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "codegen_alg.hpp"
-#include "coalg.hpp"
 #include "expr.hpp"
 #include "fix.hpp"
 #include <vector>
@@ -66,3 +65,26 @@ Fx(Map(
 		Fx(Scl(5)))),
 	testExpr4));
 auto test5 = []() {return cata(alg, testExpr5); };
+
+Fix<F> testExpr6 =
+Fx(Map(
+	Fx(Lam('a',
+		Fx(Fold(
+			Fx(Lam('b',
+				Fx(Lam('c',
+					Fx(Add(
+						Fx(Var('b')),
+						Fx(Var('c')))))))),
+			Fx(Zip(
+				Fx(Lam('b',
+					Fx(Lam('c',
+						Fx(Mul(
+							Fx(Var('b')),
+							Fx(Var('c')))))))),
+				Fx(Var('a')),
+				Fx(Vec({ Fx(Scl(7)), Fx(Scl(8)), Fx(Scl(9)) })))),
+			Fx(Scl(0)))))),
+	Fx(Vec({
+		Fx(Vec({ Fx(Scl(1)), Fx(Scl(2)), Fx(Scl(3)) })),
+		Fx(Vec({ Fx(Scl(4)), Fx(Scl(5)), Fx(Scl(6)) })) }))));
+auto test6 = []() {return cata(alg, testExpr6); };

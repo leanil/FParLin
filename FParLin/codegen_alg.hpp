@@ -65,6 +65,14 @@ struct alg_visitor : boost::static_visitor<string> {
 	string operator()(Map_<string> e) const {
 		return "Map(" + e.lambda() + "," + e.vector() + ")";
 	}
+
+	string operator()(Fold_<string> e) const {
+		return "Fold(" + e.lambda() + "," + e.vector() + "," + e.init() + ")";
+	}
+
+	string operator()(Zip_<string> e) const {
+		return "Zip(" + e.lambda() + "," + e.vector_1() + "," + e.vector_2() + ")";
+	}
 };
 
 string alg(F<string> e) {

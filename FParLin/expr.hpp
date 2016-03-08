@@ -21,6 +21,8 @@ template<typename A> struct Apply;
 template<typename A> struct Lambda;
 struct Variable;
 template<typename A> struct Map_;
+template<typename A> struct Fold_;
+template<typename A> struct Zip_;
 
 template<typename A>
 using ExprF =
@@ -32,7 +34,9 @@ boost::variant<
 	Apply<A>,
 	Lambda<A>,
 	Variable,
-	Map_<A>
+	Map_<A>,
+	Fold_<A>,
+	Zip_<A>
 >;
 
 template<typename A>
@@ -46,6 +50,8 @@ struct F : ExprF<A> {
 	F(Lambda<A> c) : ExprF<A>(c) {}
 	F(Variable c) : ExprF<A>(c) {}
 	F(Map_<A> c) : ExprF<A>(c) {}
+	F(Fold_<A> c) : ExprF<A>(c) {}
+	F(Zip_<A> c) : ExprF<A>(c) {}
 };
 
 struct Scalar {
@@ -144,6 +150,36 @@ struct Map_ {
 	map<char, shared_ptr<Fix<F>>> subst;
 };
 
+template<typename A>
+struct Fold_ {
+	Fold_(A lambda, A vector, A init) : lambda_(new A(lambda)), vector_(new A(vector)), init_(new A(init)) {}
+	Fold_(A lambda, A vector, A init, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
+		lambda_(new A(lambda)), vector_(new A(vector)), init_(new A(init)), values{ values }, subst{ subst } {}
+	A& lambda() { return *lambda_; }
+	A& vector() { return *vector_; }
+	A& init() { return *init_; }
+	shared_ptr<A> lambda_;
+	shared_ptr<A> vector_;
+	shared_ptr<A> init_;
+	stack<shared_ptr<Fix<F>>> values;
+	map<char, shared_ptr<Fix<F>>> subst;
+};
+
+template<typename A>
+struct Zip_ {
+	Zip_(A lambda, A vector_1, A vector_2) : lambda_(new A(lambda)), vector_1_(new A(vector_1)), vector_2_(new A(vector_2)) {}
+	Zip_(A lambda, A vector_1, A vector_2, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst) :
+		lambda_(new A(lambda)), vector_1_(new A(vector_1)), vector_2_(new A(vector_2)), values{ values }, subst{ subst } {}
+	A& lambda() { return *lambda_; }
+	A& vector_1() { return *vector_1_; }
+	A& vector_2() { return *vector_2_; }
+	shared_ptr<A> lambda_;
+	shared_ptr<A> vector_1_;
+	shared_ptr<A> vector_2_;
+	stack<shared_ptr<Fix<F>>> values;
+	map<char, shared_ptr<Fix<F>>> subst;
+};
+
 // kényelmi függvények
 template<typename A = Fix<F>>
 F<A> Scl(int val) { return Scalar{ val }; }
@@ -168,3 +204,9 @@ F<A> Var(char id) { return Variable{ id }; }
 
 template<typename A>
 F<A> Map(A a, A b) { return Map_<A>(a, b); }
+
+template<typename A>
+F<A> Fold(A a, A b, A c) { return Fold_<A>(a, b, c); }
+
+template<typename A>
+F<A> Zip(A a, A b, A c) { return Zip_<A>(a, b, c); }

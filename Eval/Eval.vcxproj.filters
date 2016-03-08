@@ -15,33 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="fix.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="coalg.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fmap.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="test.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="const.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="evaluator_alg.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codegen_alg.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="result.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="expr.hpp">
+    <ClCompile Include="fparlin.hpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

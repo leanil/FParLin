@@ -26,8 +26,8 @@ ostream& operator<<(ostream& out, const vector<T>& v) {
 }
 
 template<typename F, typename E>
-vector<typename result_of<F(E)>::type> Map(const F& f, const vector<E>& v) {
-	vector<typename result_of<F(E)>::type> result;
+auto Map(const F& f, const vector<E>& v) {
+	vector<result_of_t<F(E)>> result;
 	transform(v.begin(), v.end(), back_inserter(result), f);
 	return result;
 }
@@ -38,8 +38,8 @@ S Fold(const F& f, const vector<E>& v, const S& s) {
 }
 
 template<typename F, typename A, typename B>
-vector<typename result_of<typename result_of<F(A)>::type(B)>::type> Zip(const F& f, const vector<A>& a, const vector<B>& b) {
-	vector<typename result_of<typename result_of<F(A)>::type(B)>::type> result;
+auto Zip(const F& f, const vector<A>& a, const vector<B>& b) {
+	vector<result_of_t<result_of_t<F(A)>(B)>> result;
 	transform(a.begin(), a.end(), b.begin(), back_inserter(result), [&](const A& a, const B& b) {return f(a)(b); });
 	return result;
 }

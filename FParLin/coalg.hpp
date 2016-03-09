@@ -2,22 +2,8 @@
 
 #include "expr.hpp"
 #include "fmap.hpp"
-#include <boost\variant\apply_visitor.hpp>
-#include <functional>
-#include <type_traits>
-
-template<typename T> struct TemplateGetter;
-
-template< template<typename> class Te, typename OldType > struct TemplateGetter<Te<OldType>> {
-	using result = Fix<Te>;
-};
-
-template<typename CoAlg, typename A>
-typename TemplateGetter< typename std::result_of<CoAlg(A)>::type >::result
-ana(CoAlg coalg, A o) {
-	using std::placeholders::_1;
-	return Fx(fmap(std::bind(&ana<CoAlg, A>, coalg, _1), coalg(o)));
-}
+#include <boost/variant/apply_visitor.hpp>
+#include <boost/variant/static_visitor.hpp>
 
 struct annotation_copy_visitor : boost::static_visitor<void> {
 

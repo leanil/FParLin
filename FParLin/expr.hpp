@@ -58,6 +58,7 @@ struct F : ExprF<A> {
 	F(Zip_<A> c) : ExprF<A>(c) {}
 
 	Fix<TF> type;
+	int cost;
 };
 
 struct Scalar {

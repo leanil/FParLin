@@ -2,27 +2,10 @@
 
 #include "const.hpp"
 #include "expr.hpp"
-#include "fmap.hpp"
+#include "falgebra.hpp"
 #include <boost/variant/apply_visitor.hpp>
 #include <algorithm>
-#include <functional>
-#include <type_traits>
 #include <vector>
-
-//AnyF<F> stands in for a F<T> when T is unknown.
-template<template<typename> class F>
-struct AnyF {
-	template<typename T>
-	operator F<T> &() const;
-};
-
-template<typename Alg, template<typename> class F>
-typename std::result_of<Alg(AnyF<F>)>::type
-cata(Alg alg, Fix<F> o) {
-	using std::placeholders::_1;
-	return alg(fmap(std::bind(&cata<Alg, F>, alg, _1),
-		unFix(o)));
-}
 
 Const alg(F<Const>);
 

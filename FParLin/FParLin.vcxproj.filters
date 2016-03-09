@@ -36,6 +36,15 @@
     <ClInclude Include="codegen_alg.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="falgebra.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="costest_alg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="costest_alg.cpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="type_expr.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>

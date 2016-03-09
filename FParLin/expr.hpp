@@ -55,6 +55,8 @@ struct F : ExprF<A> {
 	F(Map_<A> c) : ExprF<A>(c) {}
 	F(Fold_<A> c) : ExprF<A>(c) {}
 	F(Zip_<A> c) : ExprF<A>(c) {}
+
+	int cost;
 };
 
 struct Scalar {

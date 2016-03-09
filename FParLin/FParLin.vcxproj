@@ -126,9 +126,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="codegen_alg.hpp" />
+    <ClInclude Include="costest_alg.h" />
+    <ClInclude Include="costest_alg.cpp" />
     <ClInclude Include="evaluator_alg.hpp" />
     <ClInclude Include="coalg.hpp" />
     <ClInclude Include="const.hpp" />
+    <ClInclude Include="falgebra.hpp" />
     <ClInclude Include="fix.hpp" />
     <ClInclude Include="fmap.hpp" />
     <ClInclude Include="test.hpp" />

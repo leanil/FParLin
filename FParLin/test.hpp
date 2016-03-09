@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "falgebra.hpp"
 #include "codegen_alg.hpp"
 #include "expr.hpp"
 #include "fix.hpp"

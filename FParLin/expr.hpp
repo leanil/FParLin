@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fix.hpp"
+#include "type_expr.hpp"
 #include <boost/variant/variant.hpp>
 #include <algorithm>
 #include <initializer_list>
@@ -55,6 +56,8 @@ struct F : ExprF<A> {
 	F(Map_<A> c) : ExprF<A>(c) {}
 	F(Fold_<A> c) : ExprF<A>(c) {}
 	F(Zip_<A> c) : ExprF<A>(c) {}
+
+	Fix<TF> type;
 };
 
 struct Scalar {

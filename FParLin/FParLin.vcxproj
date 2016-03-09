@@ -132,6 +132,7 @@
     <ClInclude Include="fix.hpp" />
     <ClInclude Include="fmap.hpp" />
     <ClInclude Include="test.hpp" />
+    <ClInclude Include="type_expr.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="expr.hpp" />

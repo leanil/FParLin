@@ -36,6 +36,9 @@
     <ClInclude Include="codegen_alg.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="type_expr.hpp">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

@@ -1,4 +1,7 @@
+#include "typecheck_alg.h"
+#include "typeprinter_alg.h"
 #include "test.hpp"
+#include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -6,6 +9,10 @@
 using namespace std;
 
 int main() {
+	//auto x = Var(Fx(Power(Fx(Double()), Fx(Value(3)))),'x');
+	Fix<F> tree = cata(typecheck_alg, testExpr4);
+	cout << cata(typeprinter_alg, get_type(tree)) << endl;
+
 	ofstream out("../Eval/result.cpp");
 	vector<string> headers{ "\"config.hpp\"", "\"fparlin.hpp\"", "<iostream>" };
 	for (string header : headers) {

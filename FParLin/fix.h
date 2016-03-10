@@ -1,9 +1,9 @@
-#ifndef FIX_HPP
-#define FIX_HPP
+#pragma once
 
 template<template<typename> class F>
 struct Fix : F<Fix<F>>
 {
+	Fix() {}
 	explicit Fix(F<Fix<F>> f)
 		: F<Fix<F>>(f)
 	{}
@@ -20,5 +20,3 @@ F<Fix<F>>& unFix(Fix<F>& f)
 {
 	return f;
 }
-
-#endif

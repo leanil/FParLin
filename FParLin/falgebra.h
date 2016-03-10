@@ -1,9 +1,18 @@
 #pragma once
 
-#include "fix.hpp"
-#include "fmap.hpp"
+#include "fix.h"
+#include <boost/variant/apply_visitor.hpp>
 #include <functional>
 #include <type_traits>
+
+template<typename Fun, typename Tag>
+struct functor_visitor;
+
+template<typename Fun, typename Fa>
+typename functor_visitor<Fun, typename Fa::tag>::result_type
+fmap(Fun f, Fa fa) {
+	return boost::apply_visitor(functor_visitor<Fun, typename Fa::tag>{f}, fa);
+}
 
 //AnyF<F> stands in for a F<T> when T is unknown.
 template<template<typename> class F>
@@ -13,10 +22,9 @@ struct AnyF {
 };
 
 template<typename Alg, template<typename> class F>
-result_of_t<Alg(AnyF<F>)> cata(Alg alg, Fix<F> o) {
+std::result_of_t<Alg(AnyF<F>)> cata(Alg alg, Fix<F> o) {
 	using std::placeholders::_1;
-	return alg(fmap(std::bind(&cata<Alg, F>, alg, _1),
-		unFix(o)));
+	return alg(fmap(std::bind(&cata<Alg, F>, alg, _1),unFix(o)));
 }
 
 template<typename T> struct TemplateGetter;

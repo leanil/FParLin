@@ -62,7 +62,11 @@ struct annotation_copy_visitor : boost::static_visitor<void> {
 struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 
 	F<Fix<F>> operator()(Scalar i) const {
-		return Scalar{ i.value };
+		return i;
+	}
+
+	F<Fix<F>> operator()(VectorView e) const {
+		return e;
 	}
 
 	F<Fix<F>> operator()(Vector<Fix<F>> e) const {

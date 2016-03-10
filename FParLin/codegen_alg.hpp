@@ -1,11 +1,9 @@
 #pragma once
 
-#include "expr.hpp"
+#include "expr.h"
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/static_visitor.hpp>
 #include <algorithm>
-#include <string>
-#include <vector>
 
 struct alg_visitor : boost::static_visitor<string> {
 

@@ -15,13 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="fix.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="coalg.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fmap.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="test.hpp">
@@ -36,24 +30,48 @@
     <ClInclude Include="codegen_alg.hpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="falgebra.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="costest_alg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="costest_alg.cpp">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="type_expr.hpp">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="typecheck_alg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="typeprinter_alg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="falgebra.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="type_fmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="type.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="expr_fmap.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="expr.hpp">
+    <ClCompile Include="typecheck_alg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="typeprinter_alg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="expr.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="expr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

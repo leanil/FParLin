@@ -16,30 +16,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="coalg.hpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="test.hpp">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="codegen_alg.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="const.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="evaluator_alg.hpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="codegen_alg.hpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="costest_alg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="costest_alg.cpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="typecheck_alg.h">
+    <ClInclude Include="evaluator_alg.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="typeprinter_alg.h">
+    <ClInclude Include="expr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="expr_fmap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="falgebra.h">
@@ -48,17 +42,32 @@
     <ClInclude Include="fix.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="type_fmap.h">
+    <ClInclude Include="test.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="type.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="expr_fmap.h">
+    <ClInclude Include="type_fmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="typecheck_alg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="typeprinter_alg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="codegen_alg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="costest_alg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="expr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -66,12 +75,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="typeprinter_alg.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="expr.h">
-      <Filter>Header Files</Filter>
-    </ClCompile>
-    <ClCompile Include="expr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

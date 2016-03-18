@@ -18,6 +18,30 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="coalg.hpp" />
+    <ClInclude Include="codegen_alg.h" />
+    <ClInclude Include="const.hpp" />
+    <ClInclude Include="costest_alg.h" />
+    <ClInclude Include="evaluator_alg.hpp" />
+    <ClInclude Include="expr.h" />
+    <ClInclude Include="expr_fmap.h" />
+    <ClInclude Include="falgebra.h" />
+    <ClInclude Include="fix.h" />
+    <ClInclude Include="test.hpp" />
+    <ClInclude Include="type.h" />
+    <ClInclude Include="typecheck_alg.h" />
+    <ClInclude Include="typeprinter_alg.h" />
+    <ClInclude Include="type_fmap.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="codegen_alg.cpp" />
+    <ClCompile Include="costest_alg.cpp" />
+    <ClCompile Include="expr.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="typecheck_alg.cpp" />
+    <ClCompile Include="typeprinter_alg.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}</ProjectGuid>
     <RootNamespace>FParLin</RootNamespace>
@@ -128,29 +152,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="codegen_alg.hpp" />
-    <ClInclude Include="costest_alg.h" />
-    <ClInclude Include="costest_alg.cpp" />
-    <ClInclude Include="evaluator_alg.hpp" />
-    <ClInclude Include="coalg.hpp" />
-    <ClInclude Include="const.hpp" />
-    <ClInclude Include="falgebra.h" />
-    <ClInclude Include="fix.h" />
-    <ClCompile Include="expr.h" />
-    <ClInclude Include="expr_fmap.h" />
-    <ClInclude Include="test.hpp" />
-    <ClInclude Include="typecheck_alg.h" />
-    <ClInclude Include="typeprinter_alg.h" />
-    <ClInclude Include="type.h" />
-    <ClInclude Include="type_fmap.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="expr.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="typecheck_alg.cpp" />
-    <ClCompile Include="typeprinter_alg.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

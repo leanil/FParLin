@@ -1,6 +1,10 @@
 #pragma once
 
 #include "expr.h"
-#include "fix.h"
+#include <string>
+#include <utility>
+#include <list>
 
-Fix<F> typecheck_alg(F<Fix<F>> e);
+using typecheck_t = pair<Fix<F>, list<string>>;
+
+typecheck_t typecheck_alg(F<typecheck_t>);

@@ -3,6 +3,7 @@
 
 #include "fix.h"
 #include "type.h"
+#include <boost/type_index.hpp>
 #include <boost/variant/variant.hpp>
 #include <boost/variant/get.hpp>
 #include <algorithm>
@@ -246,6 +247,16 @@ template<typename A>
 F<A> Zip(A a, A b, A c) { return Zip_<A>(a, b, c); }
 
 Fix<TF> get_type(const Fix<F>& a);
+
+template<typename A>
+bool is_of_type(Fix<F> a) {
+	return get_type(a).type() == boost::typeindex::type_id<A>().type_info();
+}
+
+template<typename A>
+bool is_of_type(Fix<TF> a) {
+	return a.type() == boost::typeindex::type_id<A>().type_info();
+}
 
 #include "expr_fmap.h"
 

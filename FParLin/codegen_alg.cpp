@@ -1,5 +1,6 @@
 #pragma once
 
+#include "codegen_alg.h"
 #include "expr.h"
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/static_visitor.hpp>
@@ -58,6 +59,6 @@ struct alg_visitor : boost::static_visitor<string> {
 	}
 };
 
-string alg(F<string> e) {
+string codegen_alg(F<string> e) {
 	return boost::apply_visitor(alg_visitor(), e);
 }

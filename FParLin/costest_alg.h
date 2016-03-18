@@ -1,6 +1,6 @@
 #pragma once
 
-#include "expr.hpp"
-#include "fix.hpp"
+#include "expr.h"
+#include "fix.h"
 
 Fix<F> costest_alg(F<Fix<F>> e);

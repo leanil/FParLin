@@ -8,6 +8,8 @@
 
 struct alg_visitor : boost::static_visitor<string> {
 
+	alg_visitor(int threshold) : threshold{ threshold } {}
+
 	string operator()(Scalar i) const {
 		return to_string(i.value);
 	}
@@ -47,18 +49,24 @@ struct alg_visitor : boost::static_visitor<string> {
 	}
 
 	string operator()(Map_<string> e) const {
-		return "Map(" + e.lambda() + "," + e.vector() + ")";
+		return (threshold && e.cost > threshold ? "Par" : "") +
+			("Map(" + e.lambda() + "," + e.vector() + ")");
 	}
 
 	string operator()(Fold_<string> e) const {
-		return "Fold(" + e.lambda() + "," + e.vector() + "," + e.init() + ")";
+		return (threshold && e.cost > threshold ? "Par" : "") +
+			("Fold(" + e.lambda() + "," + e.vector() + "," + e.init() + ")");
 	}
 
 	string operator()(Zip_<string> e) const {
-		return "Zip(" + e.lambda() + "," + e.vector_1() + "," + e.vector_2() + ")";
+		return (threshold && e.cost > threshold ? "Par" : "") +
+			("Zip(" + e.lambda() + "," + e.vector_1() + "," + e.vector_2() + ")");
 	}
+
+	int threshold;
 };
 
-string codegen_alg(F<string> e) {
-	return boost::apply_visitor(alg_visitor(), e);
+
+string codegen_alg::operator()(F<string> e) {
+	return boost::apply_visitor(alg_visitor(threshold), e);
 }

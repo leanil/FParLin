@@ -1,5 +1,6 @@
 #pragma once
 
+#include <ppl.h>
 #include <algorithm>
 #include <initializer_list>
 #include <iterator>
@@ -23,6 +24,13 @@ ostream& operator<<(ostream& out, const vector<T>& v) {
 	}
 	out << '}';
 	return out;
+}
+
+template<typename F, typename E>
+auto ParMap(const F& f, const vector<E>& v) {
+	vector<result_of_t<F(E)>> result(v.size());
+	concurrency::parallel_transform(v.begin(), v.end(), result.begin(), f);
+	return result;
 }
 
 template<typename F, typename E>

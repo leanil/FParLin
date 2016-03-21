@@ -3,4 +3,9 @@
 #include "expr.h"
 #include <string>
 
-string codegen_alg(F<string>);
+struct codegen_alg {
+	codegen_alg(int threshold = 0) : threshold{ threshold } {}
+	string operator()(F<string>);
+
+	int threshold;
+};

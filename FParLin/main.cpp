@@ -20,7 +20,7 @@ void build(Fix<F> expr) {
 			out << "#include " << header << endl;
 		}
 		out << "\nint main() {\n";
-		out << "    std::cout << " << cata(codegen_alg, checked.first) << " << std::endl;\n";
+		out << "    std::cout << " << cata(codegen_alg(50), checked.first) << " << std::endl;\n";
 		out << "}";
 	}
 	else {

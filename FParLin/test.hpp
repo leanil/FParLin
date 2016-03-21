@@ -15,7 +15,6 @@ Fx(Mul(
 		Fx(Scl(3))
 		)),
 	Fx(Scl(4))));
-auto test1 = []() {return cata(codegen_alg,  testExpr1); };
 
 Fix<TF> double_to_double = Fx(Arrow(Fx(Double()), Fx(Double())));
 auto x = Var(Fx(Double()), 'x'), y = Var(Fx(Double()), 'y');
@@ -34,7 +33,6 @@ Fx(App(
 	Fx(Mul(
 		Fx(Scl(4)),
 		Fx(Scl(3))))));
-auto test2 = []() {return cata(codegen_alg, testExpr2); };
 
 //((λ_x.x+1)+(λ_y.y*y))(λ_x.x+x)2 == 21
 Fix<F> testExpr3 =
@@ -54,11 +52,9 @@ Fx(App(
 				Fx(x),
 				Fx(x))))),
 		Fx(Scl(2))))));
-auto test3 = []() {return cata(codegen_alg, testExpr3); };
 
 Fix<F> testExpr4 =
 Fx(Vec({ testExpr1, testExpr2, testExpr1 }));
-auto test4 = []() {return cata(codegen_alg, testExpr4); };
 
 Fix<F> testExpr5 =
 Fx(Map(
@@ -70,7 +66,6 @@ Fx(Map(
 					Fx(y))))))),
 		Fx(Scl(5)))),
 	testExpr4));
-auto test5 = []() {return cata(codegen_alg, testExpr5); };
 
 auto v = Var(Fx(Power(Fx(Double()), Fx(Value(3)))), 'v');
 Fix<F> testExpr6 =
@@ -94,7 +89,6 @@ Fx(Map(
 	Fx(Vec({
 		Fx(Vec({ Fx(Scl(1)), Fx(Scl(2)), Fx(Scl(3)) })),
 		Fx(Vec({ Fx(Scl(4)), Fx(Scl(5)), Fx(Scl(6)) })) }))));
-auto test6 = []() {return cata(codegen_alg, testExpr6); };
 
 Fix<F> typeError1 =
 Fx(Vec({

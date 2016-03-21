@@ -16,6 +16,24 @@ struct type_getter : boost::static_visitor<Fix<TF>> {
 	Fix<TF> operator()(Zip_<Fix<F>> a) const { return a.type; }
 };
 
+struct cost_getter : boost::static_visitor<int> {
+	int operator()(Scalar a) const { return a.cost; }
+	int operator()(VectorView a) const { return a.cost; }
+	int operator()(Vector<Fix<F>> a) const { return a.cost; }
+	int operator()(Addition<Fix<F>> a) const { return a.cost; }
+	int operator()(Multiplication<Fix<F>> a) const { return a.cost; }
+	int operator()(Apply<Fix<F>> a) const { return a.cost; }
+	int operator()(Lambda<Fix<F>> a) const { return a.cost; }
+	int operator()(Variable a) const { return a.cost; }
+	int operator()(Map_<Fix<F>> a) const { return a.cost; }
+	int operator()(Fold_<Fix<F>> a) const { return a.cost; }
+	int operator()(Zip_<Fix<F>> a) const { return a.cost; }
+};
+
 Fix<TF> get_type(const Fix<F>& a) {
 	return boost::apply_visitor(type_getter(), a);
+}
+
+int get_cost(const Fix<F>& a) {
+	return boost::apply_visitor(cost_getter(), a);
 }

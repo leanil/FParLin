@@ -1,4 +1,5 @@
 #include "codegen_alg.h"
+#include "costest_alg.h"
 #include "test.hpp"
 #include "typecheck_alg.h"
 #include <iostream>
@@ -11,6 +12,8 @@ using namespace std;
 void build(Fix<F> expr) {
 	typecheck_t checked = cata(typecheck_alg, expr);
 	if (checked.second.empty()) {
+		checked.first = cata(costest_alg, checked.first);
+		cout << "cost: " << get_cost(checked.first) << endl;
 		ofstream out("../Eval/result.cpp");
 		vector<string> headers{ "\"config.hpp\"", "\"fparlin.hpp\"", "<iostream>" };
 		for (string header : headers) {
@@ -28,5 +31,5 @@ void build(Fix<F> expr) {
 }
 
 int main() {
-	build(typeErrors);
+	build(testExpr6);
 }

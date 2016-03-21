@@ -3,65 +3,74 @@
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/static_visitor.hpp>
 #include <algorithm>
+#include <memory>
+#include <numeric>
 #include <vector>
 
-//struct alg_visitor : boost::static_visitor<Fix<F>> {
-//
-//	Fix<F> operator()(Scalar a) const {
-//		F<Fix<F>> b = a;
-//		b.cost = 1;
-//		return Fx(b);
-//	}
-//
-//	Fix<F> operator()(VectorView a) const {
-//		F<Fix<F>> b = a;
-//		b.cost = 1;
-//		return Fx(b);
-//	}
-//
-//	Fix<F> operator()(Vector<Fix<F>> e) const {
-//		Fix<F> tmp = "make_vector({";
-//		for (auto element : e.elements) {
-//			tmp += *element + ',';
-//		}
-//		tmp.pop_back();
-//		tmp += "})";
-//		return tmp;
-//	}
-//
-//	Fix<F> operator()(Addition<Fix<F>> e) const {
-//		return '(' + e.left() + ")+(" + e.right() + ')';
-//	}
-//
-//	Fix<F> operator()(Multiplication<Fix<F>> e) const {
-//		return '(' + e.left() + ")*(" + e.right() + ')';
-//	}
-//
-//	Fix<F> operator()(Apply<Fix<F>> e) const {
-//		return e.lambda() + '(' + e.input() + ')';
-//	}
-//
-//	Fix<F> operator()(Lambda<Fix<F>> e) const {
-//		return Fix<F>("[&](const auto& ") + e.id + "){return " + e.body() + ";}";
-//	}
-//
-//	Fix<F> operator()(Variable e) const {
-//		return Fix<F>(1, e.id);
-//	}
-//
-//	Fix<F> operator()(Map_<Fix<F>> e) const {
-//		return "Map(" + e.lambda() + "," + e.vector() + ")";
-//	}
-//
-//	Fix<F> operator()(Fold_<Fix<F>> e) const {
-//		return "Fold(" + e.lambda() + "," + e.vector() + "," + e.init() + ")";
-//	}
-//
-//	Fix<F> operator()(Zip_<Fix<F>> e) const {
-//		return "Zip(" + e.lambda() + "," + e.vector_1() + "," + e.vector_2() + ")";
-//	}
-//};
+struct alg_visitor : boost::static_visitor<Fix<F>> {
+
+	Fix<F> operator()(Scalar a) const {
+		a.cost = 1;
+		return Fx(F<Fix<F>>(a));
+	}
+
+	Fix<F> operator()(VectorView a) const {
+		a.cost = 1;
+		return Fx(F<Fix<F>>(a));
+	}
+
+	Fix<F> operator()(Vector<Fix<F>> a) const {
+		a.cost = accumulate(a.elements.begin(), a.elements.end(), 0, [](int c, shared_ptr<Fix<F>> e) {return c + get_cost(*e); });
+		return Fx(F<Fix<F>>(a));
+	}
+
+	Fix<F> operator()(Addition<Fix<F>> a) const {
+		a.cost = get_cost(a.left()) + get_cost(a.right()) + 1;
+		return Fx(F<Fix<F>>(a));
+	}
+
+	Fix<F> operator()(Multiplication<Fix<F>> a) const {
+		a.cost = get_cost(a.left()) + get_cost(a.right()) + 1;
+		return Fx(F<Fix<F>>(a));
+	}
+
+	Fix<F> operator()(Apply<Fix<F>> a) const {
+		a.cost = get_cost(a.lambda()) + get_cost(a.input()) + 1;
+		return Fx(F<Fix<F>>(a));
+	}
+
+	Fix<F> operator()(Lambda<Fix<F>> a) const {
+		a.cost = get_cost(a.body());
+		return Fx(F<Fix<F>>(a));
+	}
+
+	Fix<F> operator()(Variable a) const {
+		a.cost = 1;
+		return Fx(F<Fix<F>>(a));
+	}
+
+	Fix<F> operator()(Map_<Fix<F>> a) const {
+		a.cost = get_cost(a.lambda())*
+			boost::get<Value_t>(boost::get<Power_t<Fix<TF>>>(get_type(a.vector())).right()).value + 
+			get_cost(a.vector()) + 1;
+		return Fx(F<Fix<F>>(a));
+	}
+
+	Fix<F> operator()(Fold_<Fix<F>> a) const {
+		a.cost = get_cost(a.lambda())*
+			boost::get<Value_t>(boost::get<Power_t<Fix<TF>>>(get_type(a.vector())).right()).value +
+			get_cost(a.vector()) + get_cost(a.init()) + 1;
+		return Fx(F<Fix<F>>(a));
+	}
+
+	Fix<F> operator()(Zip_<Fix<F>> a) const {
+		a.cost = get_cost(a.lambda())*
+			boost::get<Value_t>(boost::get<Power_t<Fix<TF>>>(get_type(a.vector_1())).right()).value +
+			get_cost(a.vector_1()) + get_cost(a.vector_2()) + 1;
+		return Fx(F<Fix<F>>(a));
+	}
+};
 
 Fix<F> costest_alg(F<Fix<F>> e) {
-	return Fx(e);// boost::apply_visitor(alg_visitor(), e);
+	return boost::apply_visitor(alg_visitor(), e);
 }

@@ -248,6 +248,8 @@ F<A> Zip(A a, A b, A c) { return Zip_<A>(a, b, c); }
 
 Fix<TF> get_type(const Fix<F>& a);
 
+int get_cost(const Fix<F>& a);
+
 template<typename A>
 bool is_of_type(Fix<F> a) {
 	return get_type(a).type() == boost::typeindex::type_id<A>().type_info();

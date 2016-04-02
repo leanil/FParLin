@@ -9,7 +9,7 @@
 
 using namespace std;
 
-void build(Fix<F> expr) {
+void build(Fix<F> expr, int threshold) {
 	typecheck_t checked = cata(typecheck_alg, expr);
 	if (checked.second.empty()) {
 		checked.first = cata(costest_alg, checked.first);
@@ -20,7 +20,7 @@ void build(Fix<F> expr) {
 			out << "#include " << header << endl;
 		}
 		out << "\nint main() {\n";
-		out << "    std::cout << " << cata(codegen_alg(50), checked.first) << " << std::endl;\n";
+		out << "    std::cout << " << cata(codegen_alg(threshold), checked.first).first << " << std::endl;\n";
 		out << "}";
 	}
 	else {
@@ -31,5 +31,5 @@ void build(Fix<F> expr) {
 }
 
 int main() {
-	build(testExpr6);
+	build(testExpr6, 50);
 }

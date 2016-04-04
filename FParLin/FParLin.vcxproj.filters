@@ -27,6 +27,9 @@
     <ClInclude Include="costest_alg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="evaluator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="evaluator_alg.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -40,9 +43,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="fix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="test.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="type.h">
@@ -65,10 +65,10 @@
     <ClCompile Include="costest_alg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="expr.cpp">
+    <ClCompile Include="evaluator.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="expr.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="typecheck_alg.cpp">

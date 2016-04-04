@@ -23,12 +23,12 @@
     <ClInclude Include="codegen_alg.h" />
     <ClInclude Include="const.hpp" />
     <ClInclude Include="costest_alg.h" />
+    <ClInclude Include="evaluator.h" />
     <ClInclude Include="evaluator_alg.hpp" />
     <ClInclude Include="expr.h" />
     <ClInclude Include="expr_fmap.h" />
     <ClInclude Include="falgebra.h" />
     <ClInclude Include="fix.h" />
-    <ClInclude Include="test.hpp" />
     <ClInclude Include="type.h" />
     <ClInclude Include="typecheck_alg.h" />
     <ClInclude Include="typeprinter_alg.h" />
@@ -37,8 +37,8 @@
   <ItemGroup>
     <ClCompile Include="codegen_alg.cpp" />
     <ClCompile Include="costest_alg.cpp" />
+    <ClCompile Include="evaluator.cpp" />
     <ClCompile Include="expr.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="typecheck_alg.cpp" />
     <ClCompile Include="typeprinter_alg.cpp" />
   </ItemGroup>
@@ -49,26 +49,26 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>LLVM-vs2014</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>LLVM-vs2014</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>LLVM-vs2014</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>LLVM-vs2014</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>

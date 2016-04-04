@@ -1,5 +1,3 @@
-#pragma once
-
 #include "codegen_alg.h"
 #include "expr.h"
 #include <boost/variant/apply_visitor.hpp>

@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "falgebra.h"
-#include "codegen_alg.h"
 #include "expr.h"
 #include "fix.h"
 #include "type.h"

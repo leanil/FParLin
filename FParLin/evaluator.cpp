@@ -39,8 +39,8 @@ bool build_dll() {
 		getline(config, vcvars);
 	}
 	string common = "/LD /analyze- /GS- /W3 /fp:precise /Gd /Oy /EHsc /D \"_CONSOLE\" /D \"_LIB\" /D \"_UNICODE\" /D \"UNICODE\""
-		" -fmsc-version=1900 /wd4190";
-	//-Wno-return-type-c-linkage
+		" -fmsc-version=1900";
+	//-Wno-return-type-c-linkage /wd4190
 #ifdef NDEBUG
 	string configuration = "/GL /Gm- /Gy /Oi /Zi /Ox /MD /D \"NDEBUG\"";
 #else

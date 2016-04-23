@@ -255,4 +255,5 @@ Status API Training Shop Blog About Pricing
 /Eval/result.lib
 /Eval/result.exp
 /Eval/result.cpp
+/Eval/result.dll
 *.idb

@@ -1,2 +1,3 @@
-"C:\Program Files (x86)\LLVM\msbuild-bin\cl.exe"
+"C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\cl.exe"
 "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat"
+"C:\Program Files (x86)\LLVM\msbuild-bin\cl.exe"

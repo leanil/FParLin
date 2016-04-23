@@ -21,12 +21,12 @@ bool process_tree(Fix<F> tree, int threshold) {
 	checked.first = cata(costest_alg, checked.first);
 	ofstream result("result.cpp");
 	vector<string> headers{ "\"fparlin.h\"", "<iostream>" , "<map>", "<string>", "<vector>" };
+	string signature = "std::vector<double> evaluator(std::map<std::string, std::vector<double>*> bigVectors)";
 	for (string header : headers) {
 		result << "#include " << header << endl;
 	}
-	result << "\nextern \"C\" {\n\t__declspec(dllexport) std::vector<double> evaluator(std::map<std::string, std::vector<double>*> bigVectors) {\n";
-	result << "\t\treturn vectorize(" << cata(codegen_alg(threshold), checked.first).first << ");\n";
-	result << "\t}\n}\n";
+	result << "\nextern \"C\" {\n\t__declspec(dllexport) " << signature << ";\n}\n\n"
+		<< signature << " {\n\t\treturn vectorize(" << cata(codegen_alg(threshold), checked.first).first << ");\n}\n";
 	result.close();
 	return true;
 }
@@ -39,7 +39,8 @@ bool build_dll() {
 		getline(config, vcvars);
 	}
 	string common = "/LD /analyze- /GS- /W3 /fp:precise /Gd /Oy /EHsc /D \"_CONSOLE\" /D \"_LIB\" /D \"_UNICODE\" /D \"UNICODE\""
-		" -fmsc-version=1900 -Wno-return-type-c-linkage";
+		" -fmsc-version=1900 /wd4190";
+	//-Wno-return-type-c-linkage
 #ifdef NDEBUG
 	string configuration = "/GL /Gm- /Gy /Oi /Zi /Ox /MD /D \"NDEBUG\"";
 #else

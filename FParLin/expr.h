@@ -70,7 +70,7 @@ using BigVector = vector<double>;
 struct VectorView {
 	string id;
 	BigVector* vector;
-	int size;
+	unsigned size;
 	Fix<TF> type;
 	int cost;
 };

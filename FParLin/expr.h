@@ -15,49 +15,7 @@
 
 using namespace std;
 
-struct Scalar;
-struct VectorView;
-template<typename A> struct Vector;
-template<typename A> struct Addition;
-template<typename A> struct Multiplication;
-template<typename A> struct Apply;
-template<typename A> struct Lambda;
-struct Variable;
-template<typename A> struct Map_;
-template<typename A> struct Fold_;
-template<typename A> struct Zip_;
-
-template<typename A>
-using ExprF =
-boost::variant<
-	Scalar,
-	VectorView,
-	Vector<A>,
-	Addition<A>,
-	Multiplication<A>,
-	Apply<A>,
-	Lambda<A>,
-	Variable,
-	Map_<A>,
-	Fold_<A>,
-	Zip_<A>
->;
-
-template<typename A>
-struct F : ExprF<A> {
-	typedef F<A> tag;
-	F(Scalar c) : ExprF<A>(c) {}
-	F(VectorView c) : ExprF<A>(c) {}
-	F(Vector<A> c) : ExprF<A>(c) {}
-	F(Addition<A> c) : ExprF<A>(c) {}
-	F(Multiplication<A> c) : ExprF<A>(c) {}
-	F(Apply<A> c) : ExprF<A>(c) {}
-	F(Lambda<A> c) : ExprF<A>(c) {}
-	F(Variable c) : ExprF<A>(c) {}
-	F(Map_<A> c) : ExprF<A>(c) {}
-	F(Fold_<A> c) : ExprF<A>(c) {}
-	F(Zip_<A> c) : ExprF<A>(c) {}
-};
+template<typename A> struct F;
 
 struct Scalar {
 	double value;
@@ -210,14 +168,44 @@ struct Zip_ {
 	int cost;
 };
 
+template<typename A>
+using ExprF =
+boost::variant<
+	Scalar,
+	VectorView,
+	Vector<A>,
+	Addition<A>,
+	Multiplication<A>,
+	Apply<A>,
+	Lambda<A>,
+	Variable,
+	Map_<A>,
+	Fold_<A>,
+	Zip_<A>
+>;
+
+template<typename A>
+struct F : ExprF<A> {
+	typedef F<A> tag;
+	F(Scalar c) : ExprF<A>(c) {}
+	F(VectorView c) : ExprF<A>(c) {}
+	F(Vector<A> c) : ExprF<A>(c) {}
+	F(Addition<A> c) : ExprF<A>(c) {}
+	F(Multiplication<A> c) : ExprF<A>(c) {}
+	F(Apply<A> c) : ExprF<A>(c) {}
+	F(Lambda<A> c) : ExprF<A>(c) {}
+	F(Variable c) : ExprF<A>(c) {}
+	F(Map_<A> c) : ExprF<A>(c) {}
+	F(Fold_<A> c) : ExprF<A>(c) {}
+	F(Zip_<A> c) : ExprF<A>(c) {}
+};
+
 template<typename A = Fix<F>>
 F<A> Scl(double val) { return Scalar{ val }; }
 
-template<typename A = Fix<F>>
-F<A> VecView(string name, BigVector* vector) { return VectorView{ name, vector, vector->size() }; }
+Fix<F> VecView(string name, BigVector* vector);
 
-template<typename A = Fix<F>>
-F<A> VecView(string name, unsigned size) { return VectorView{ name, nullptr, size }; }
+Fix<F> VecView(string name, unsigned size);
 
 template<typename A>
 F<A> Vec(initializer_list<A> a) { return Vector<A>(a); }
@@ -232,7 +220,7 @@ template<typename A>
 F<A> App(A a, A b) { return Apply<A>(a, b); }
 
 template<typename A>
-F<A> Lam(F<A> v, Fix<TF> t, A a) { return Lambda<A>(a, boost::get<Variable>(v).id, Fx(Arrow(boost::get<Variable>(v).type,t))); }
+F<A> Lam(F<A> v, Fix<TF> t, A a) { return Lambda<A>(a, boost::get<Variable>(v).id, Fx(Arrow(boost::get<Variable>(v).type, t))); }
 
 template<typename A = Fix<F>>
 F<A> Var(Fix<TF> t, char id) { return Variable{ t, id }; }

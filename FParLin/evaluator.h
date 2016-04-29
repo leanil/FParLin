@@ -1,6 +1,7 @@
 #pragma once
 
 #include "expr.h"
+#include <fstream>
 #include <functional>
 #include <map>
 #include <string>
@@ -9,7 +10,7 @@
 std::function<std::vector<double>(std::map<std::string, std::vector<double>*>)>  get_evaluator(Fix<F> tree, int threshold);
 
 template<typename T>
-ostream& operator<<(ostream& out, const vector<T>& v) {
+std::ostream& operator<<(std::ostream& out, const std::vector<T>& v) {
 	out << '{';
 	for (unsigned i = 0; i < v.size(); ++i) {
 		out << (i ? "," : "") << v[i];

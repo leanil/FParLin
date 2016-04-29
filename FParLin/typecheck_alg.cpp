@@ -10,11 +10,9 @@
 #include <memory>
 #include <numeric>
 
-#include <iostream>
-
 using namespace std;
 
-struct alg_visitor : boost::static_visitor<typecheck_t> {
+struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 
 	typecheck_t operator()(Scalar a) const {
 		a.type = Fx(Double());
@@ -241,5 +239,5 @@ struct alg_visitor : boost::static_visitor<typecheck_t> {
 };
 
 typecheck_t typecheck_alg(F<typecheck_t> e) {
-	return boost::apply_visitor(alg_visitor(), e);
+	return boost::apply_visitor(typecheck_alg_visitor(), e);
 }

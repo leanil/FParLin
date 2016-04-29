@@ -1,20 +1,17 @@
 #pragma once
 
 template<template<typename> class T>
-struct Fix : T<Fix<T>>
-{
+struct Fix : T<Fix<T>> {
 	Fix() {}
-	explicit Fix(T<Fix<T>> t): T<Fix<T>>(t){}
+	explicit Fix(const T<Fix<T>>& t) : T<Fix<T>>(t) {}
 };
 
 template<template<typename> class T>
-Fix<T> Fx(T<Fix<T>> t)
-{
+Fix<T> Fx(T<Fix<T>> t) {
 	return Fix<T>{t};
 }
 
 template<template<typename> class T>
-T<Fix<T>>& unFix(Fix<T>& f)
-{
+T<Fix<T>>& unFix(Fix<T>& f) {
 	return f;
 }

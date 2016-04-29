@@ -82,7 +82,7 @@ Fx(Map(
 							Fx(x),
 							Fx(y))))))),
 				Fx(v),
-				Fx(VecView("vec",3)))),
+				VecView("vec",3))),
 			Fx(Scl(0)))))),
 	Fx(Vec({
 		Fx(Vec({ Fx(Scl(1)), Fx(Scl(2)), Fx(Scl(3)) })),
@@ -91,12 +91,12 @@ Fx(Map(
 Fix<F> typeError1 =
 Fx(Vec({
 	Fx(Scl(0)),
-	Fx(VecView("vec",1)) }));
+	VecView("vec",1) }));
 
 Fix<F> typeError2 =
 Fx(Add(
 	Fx(Scl(0)),
-	Fx(VecView("vec",1))));
+	VecView("vec",1)));
 
 Fix<F> typeError3 =
 Fx(App(
@@ -107,7 +107,7 @@ Fix<F> typeError4 =
 Fx(App(
 	Fx(Lam(x,Fx(Double()),
 		Fx(Var(Fx(Double()),'x')))),
-	Fx(VecView("vec", 1))));
+	VecView("vec", 1)));
 
 Fix<F> typeError5 =
 Fx(Lam(x, double_to_double,
@@ -122,7 +122,7 @@ Fix<F> typeError7 =
 Fx(Map(
 	Fx(Lam(Var(Fx(Power(Fx(Double()),Fx(Value(1)))),'x'),Fx(Double()),
 		Fx(Scl(0)))),
-	Fx(VecView("vec", 1))));
+	VecView("vec", 1)));
 
 Fix<F> typeError8 =
 Fx(Fold(

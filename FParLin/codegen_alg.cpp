@@ -4,9 +4,9 @@
 #include <boost/variant/static_visitor.hpp>
 #include <algorithm>
 
-struct alg_visitor : boost::static_visitor<codegen_t> {
+struct codegen_alg_visitor : boost::static_visitor<codegen_t> {
 
-	alg_visitor(int threshold) : threshold{ threshold } {}
+	codegen_alg_visitor(int threshold) : threshold{ threshold } {}
 
 	codegen_t operator()(Scalar i) const {
 		return{ to_string(i.value),false };
@@ -77,5 +77,5 @@ struct alg_visitor : boost::static_visitor<codegen_t> {
 
 
 codegen_t codegen_alg::operator()(F<codegen_t> e) {
-	return boost::apply_visitor(alg_visitor(threshold), e);
+	return boost::apply_visitor(codegen_alg_visitor(threshold), e);
 }

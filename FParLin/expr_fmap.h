@@ -2,7 +2,7 @@
 
 #include "expr.h"
 #include "falgebra.h"
-#include <boost\variant\static_visitor.hpp>
+#include <boost/variant/static_visitor.hpp>
 #include <algorithm>
 #include <iterator>
 #include <memory>

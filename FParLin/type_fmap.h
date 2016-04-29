@@ -2,7 +2,7 @@
 
 #include "falgebra.h"
 #include "type.h"
-#include <boost\variant\static_visitor.hpp>
+#include <boost/variant/static_visitor.hpp>
 #include <type_traits>
 
 template<typename Fun, typename A>

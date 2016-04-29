@@ -1,5 +1,4 @@
 #include "costest_alg.h"
-
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/static_visitor.hpp>
 #include <algorithm>
@@ -7,7 +6,7 @@
 #include <numeric>
 #include <vector>
 
-struct alg_visitor : boost::static_visitor<Fix<F>> {
+struct costest_alg_visitor : boost::static_visitor<Fix<F>> {
 
 	Fix<F> operator()(Scalar a) const {
 		a.cost = 1;
@@ -72,5 +71,5 @@ struct alg_visitor : boost::static_visitor<Fix<F>> {
 };
 
 Fix<F> costest_alg(F<Fix<F>> e) {
-	return boost::apply_visitor(alg_visitor(), e);
+	return boost::apply_visitor(costest_alg_visitor(), e);
 }

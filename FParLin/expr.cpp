@@ -2,6 +2,10 @@
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/static_visitor.hpp>
 
+Fix<F> VecView(string name, BigVector* vector) { return Fix<F>(F<Fix<F>>(VectorView{ name, vector, (unsigned)vector->size() })); }
+
+Fix<F> VecView(string name, unsigned size) { return Fix<F>(F<Fix<F>>(VectorView{ name, nullptr, size })); }
+
 struct type_getter : boost::static_visitor<Fix<TF>> {
 	Fix<TF> operator()(Scalar a) const { return a.type; }
 	Fix<TF> operator()(VectorView a) const { return a.type; }

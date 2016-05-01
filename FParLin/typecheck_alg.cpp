@@ -15,12 +15,12 @@ using namespace std;
 struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 
 	typecheck_t operator()(Scalar a) const {
-		a.type = Fx(Double());
+		a.type = Double();
 		return{ Fx((F<Fix<F>>)a), list<string>() };
 	}
 
 	typecheck_t operator()(VectorView a) const {
-		a.type = Fx(Power(Fx(Double()), Fx(Value(a.size))));
+		a.type = Power(Double(), Size(a.size));
 		return{ Fx((F<Fix<F>>)a), list<string>() };
 	}
 
@@ -44,7 +44,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 				}
 			}
 		}
-		b.type = errors.empty() ? Fx(Power(get_type(*b.elements[0]), Fx(Value(b.elements.size())))) : Fx(Invalid());
+		b.type = errors.empty() ? Power(get_type(*b.elements[0]), Size(b.elements.size())) : Invalid();
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 
@@ -63,8 +63,8 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 			}
 		}
 		b.type = errors.empty() ?
-			(is_of_type<Int_t>(b.left()) && is_of_type<Int_t>(b.right()) ? Fx(Int()) : Fx(Double())) :
-			Fx(Invalid());
+			(is_of_type<Int_t>(b.left()) && is_of_type<Int_t>(b.right()) ? Int() : Double()) :
+			Invalid();
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 
@@ -83,8 +83,8 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 			}
 		}
 		b.type = errors.empty() ?
-			(is_of_type<Int_t>(b.left()) && is_of_type<Int_t>(b.right()) ? Fx(Int()) : Fx(Double())) :
-			Fx(Invalid());
+			(is_of_type<Int_t>(b.left()) && is_of_type<Int_t>(b.right()) ? Int() : Double()) :
+			Invalid();
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 
@@ -104,7 +104,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 				if (param_type != input_type) {
 					errors.push_back(param_type + " != " + input_type);
 				}
-				b.type = errors.empty() ? lambda_type.right() : Fx(Invalid());
+				b.type = errors.empty() ? lambda_type.right() : Invalid();
 			}
 		}	
 		return{ Fx((F<Fix<F>>)b), errors };
@@ -120,7 +120,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 			if (return_type != body_type) {
 				errors.push_back(return_type + " != " + body_type);
 			}
-			b.type = errors.empty() ? b.type : Fx(Invalid());
+			b.type = errors.empty() ? b.type : Invalid();
 		}
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
@@ -150,7 +150,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 				if (param_type != input_type) {
 					errors.push_back(param_type + " != " + input_type);
 				}
-				b.type = errors.empty() ? Fx(Power(lambda_type.right(), vector_type.right())) : Fx(Invalid());
+				b.type = errors.empty() ? Power(lambda_type.right(), vector_type.right()) : Invalid();
 		}
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
@@ -188,7 +188,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 			if (result_type != init_type) {
 				errors.push_back(result_type + " != " + init_type);
 			}
-			b.type = errors.empty() ? get_type(b.init()) : Fx(Invalid());
+			b.type = errors.empty() ? get_type(b.init()) : Invalid();
 		}
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
@@ -232,7 +232,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 			if (size1_type != size2_type) {
 				errors.push_back(size1_type + " != " + size2_type);
 			}
-			b.type = errors.empty() ? Fx(Power(lambda2_type.right(), vector1_type.right())) : Fx(Invalid());
+			b.type = errors.empty() ? Power(lambda2_type.right(), vector1_type.right()) : Invalid();
 		}
 		return{ Fx((F<Fix<F>>)b), errors };
 	}

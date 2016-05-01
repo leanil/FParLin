@@ -24,20 +24,20 @@ struct functor_visitor<Fun, TF<A>>: boost::static_visitor<TF<std::result_of_t<Fu
 		return a;
 	}
 
-	TF<B> operator()(Value_t a) const {
+	TF<B> operator()(Size_t a) const {
 		return a;
 	}
 
 	TF<B> operator()(Product_t<A> a) const {
-		return Product(f(a.left()), f(a.right()));
+		return Product_t<B>(f(a.left()), f(a.right()));
 	}
 
 	TF<B> operator()(Power_t<A> a) const {
-		return Power(f(a.left()), f(a.right()));
+		return Power_t<B>(f(a.left()), f(a.right()));
 	}
 
 	TF<B> operator()(Arrow_t<A> a) const {
-		return Arrow(f(a.left()), f(a.right()));
+		return Arrow_t<B>(f(a.left()), f(a.right()));
 	}
 
 private:

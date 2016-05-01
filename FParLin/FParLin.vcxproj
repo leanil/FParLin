@@ -39,6 +39,7 @@
     <ClCompile Include="costest_alg.cpp" />
     <ClCompile Include="evaluator.cpp" />
     <ClCompile Include="expr.cpp" />
+    <ClCompile Include="type.cpp" />
     <ClCompile Include="typecheck_alg.cpp" />
     <ClCompile Include="typeprinter_alg.cpp" />
   </ItemGroup>

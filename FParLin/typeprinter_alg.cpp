@@ -16,8 +16,8 @@ struct alg_visitor : boost::static_visitor<string> {
 		return "double";
 	}
 
-	string operator()(Value_t a) const {
-		return to_string(a.value);
+	string operator()(Size_t a) const {
+		return to_string(a.size);
 	}
 
 	string operator()(Product_t<string> a) const {

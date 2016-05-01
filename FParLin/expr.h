@@ -200,39 +200,40 @@ struct F : ExprF<A> {
 	F(Zip_<A> c) : ExprF<A>(c) {}
 };
 
-template<typename A = Fix<F>>
-F<A> Scl(double val) { return Scalar{ val }; }
+Fix<F> operator""_scl(unsigned long long val);
+
+Fix<F> operator""_scl(long double val);
 
 Fix<F> VecView(string name, BigVector* vector);
 
 Fix<F> VecView(string name, unsigned size);
 
 template<typename A>
-F<A> Vec(initializer_list<A> a) { return Vector<A>(a); }
+Fix<F> Vec(initializer_list<A> a) { return Fx(F<Fix<F>>(Vector<A>(a))); }
 
 template<typename A>
-F<A> Add(A a, A b) { return Addition<A>(a, b); }
+Fix<F> operator+(A a, A b) { return Fx(F<Fix<F>>(Addition<A>(a, b))); }
 
 template<typename A>
-F<A> Mul(A a, A b) { return Multiplication<A>(a, b); }
+Fix<F> operator*(A a, A b) { return Fx(F<Fix<F>>(Multiplication<A>(a, b))); }
 
 template<typename A>
-F<A> App(A a, A b) { return Apply<A>(a, b); }
+Fix<F> App(A a, A b) { return Fx(F<Fix<F>>(Apply<A>(a, b))); }
 
 template<typename A>
-F<A> Lam(F<A> v, Fix<TF> t, A a) { return Lambda<A>(a, boost::get<Variable>(v).id, Fx(Arrow(boost::get<Variable>(v).type, t))); }
+Fix<F> Lam(Fix<TF> t, F<A> v, A a) { return Fx(F<Fix<F>>(Lambda<A>(a, boost::get<Variable>(v).id, Arrow(boost::get<Variable>(v).type, t)))); }
 
 template<typename A = Fix<F>>
-F<A> Var(Fix<TF> t, char id) { return Variable{ t, id }; }
+Fix<F> Var(Fix<TF> t, char id) { return Fx(F<Fix<F>>(Variable{ t, id })); }
 
 template<typename A>
-F<A> Map(A a, A b) { return Map_<A>(a, b); }
+Fix<F> Map(A a, A b) { return Fx(F<Fix<F>>(Map_<A>(a, b))); }
 
 template<typename A>
-F<A> Fold(A a, A b, A c) { return Fold_<A>(a, b, c); }
+Fix<F> Fold(A a, A b, A c) { return Fx(F<Fix<F>>(Fold_<A>(a, b, c))); }
 
 template<typename A>
-F<A> Zip(A a, A b, A c) { return Zip_<A>(a, b, c); }
+Fix<F> Zip(A a, A b, A c) { return Fx(F<Fix<F>>(Zip_<A>(a, b, c))); }
 
 Fix<TF> get_type(const Fix<F>& a);
 

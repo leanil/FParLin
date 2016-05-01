@@ -13,8 +13,8 @@ struct Int_t {};
 
 struct Double_t {};
 
-struct Value_t {
-	int value;
+struct Size_t {
+	int size;
 };
 
 template<typename A>
@@ -49,7 +49,7 @@ using TypeF = boost::variant<
 	Invalid_t,
 	Int_t,
 	Double_t,
-	Value_t,
+	Size_t,
 	Product_t<A>,
 	Power_t<A>,
 	Arrow_t<A>
@@ -62,32 +62,30 @@ struct TF : TypeF<A> {
 	TF(Invalid_t a) : TypeF<A>(a) {}
 	TF(Int_t a) : TypeF<A>(a) {}
 	TF(Double_t a) : TypeF<A>(a) {}
-	TF(Value_t a) : TypeF<A>(a) {}
+	TF(Size_t a) : TypeF<A>(a) {}
 	TF(Product_t<A> a) : TypeF<A>(a) {}
 	TF(Power_t<A> a) : TypeF<A>(a) {}
 	TF(Arrow_t<A> a) : TypeF<A>(a) {}
 };
 
-template<typename A = Fix<TF>>
-TF<A> Invalid() { return Invalid_t(); }
+Fix<TF> Invalid();
 
-template<typename A = Fix<TF>>
-TF<A> Int() { return Int_t(); }
+Fix<TF> Int();
 
-template<typename A = Fix<TF>>
-TF<A> Double() { return Double_t(); }
+Fix<TF> Double();
 
-template<typename A = Fix<TF>>
-TF<A> Value(int x) { return Value_t{ x }; }
+Fix<TF> operator""_size(unsigned long long x);
+
+Fix<TF> Size(int x);
 
 template<typename A>
-TF<A> Product(A a, A b) { return Product_t<A>(a,b); }
+Fix<TF> Product(A a, A b) { return Fx(TF<Fix<TF>>(Product_t<A>(a,b))); }
 
 template<typename A>
-TF<A> Power(A a, A b) { return Power_t<A>(a, b); }
+Fix<TF> Power(A a, A b) { return Fx(TF<Fix<TF>>(Power_t<A>(a, b))); }
 
 template<typename A>
-TF<A> Arrow(A a, A b) { return Arrow_t<A>(a, b); }
+Fix<TF> Arrow(A a, A b) { return Fx(TF<Fix<TF>>(Arrow_t<A>(a, b))); }
 
 #include "type_fmap.h"
 

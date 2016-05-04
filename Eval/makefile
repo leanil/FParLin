@@ -3,7 +3,7 @@ FPARLIN=../FParLin
 CFLAGS=-c -Wall -I/mnt/hgfs/host/Programs/boost_1_60_0 -I$(FPARLIN) -std=c++14 -g
 LDFLAGS=-ldl -pthread
 LIB=../FParLin/bin/fparlin.a
-SOURCES=main.cpp
+SOURCES=main.cpp big_test.cpp error_test.cpp functional_test.cpp
 OBJECTS=$(patsubst %.cpp,obj/%.o,$(SOURCES))
 EXECUTABLE=eval
 

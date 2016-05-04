@@ -96,7 +96,7 @@ evaluator_t link_dll() {
 		return nullptr;
 	}
 #elif __linux__
-	void* dll = dlopen((result_name + ".so").c_str(), RTLD_NOW);
+	void* dll = dlopen(("./" + result_name + ".so").c_str(), RTLD_NOW);
 	if (!dll) {
 		cerr << "could not load dll: " << dlerror() << endl;
 		return nullptr;

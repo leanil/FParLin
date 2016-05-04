@@ -24,7 +24,6 @@ int main() {
 	generate(vec->begin(), vec->end(), [&]() {return dist(rand); });
 	generate(row->begin(), row->end(), [&]() {return dist(rand); });
 	generate(vec_to_sum->begin(), vec_to_sum->end(), [&]() {return dist(rand); });
-	cout << vec->front() << " " << row->front();
 	map<string, vector<double>*> bigVectors{ {"vec", vec}, {"row", row}, {"vec_to_sum", vec_to_sum} };
 
 	vector<double> times;

@@ -218,22 +218,24 @@ template<typename A>
 Fix<F> operator*(A a, A b) { return Fx(F<Fix<F>>(Multiplication<A>(a, b))); }
 
 template<typename A>
-Fix<F> App(A a, A b) { return Fx(F<Fix<F>>(Apply<A>(a, b))); }
+Fix<F> App(A lambda, A value) { return Fx(F<Fix<F>>(Apply<A>(lambda, value))); }
 
 template<typename A>
-Fix<F> Lam(Fix<TF> t, F<A> v, A a) { return Fx(F<Fix<F>>(Lambda<A>(a, boost::get<Variable>(v).id, Arrow(boost::get<Variable>(v).type, t)))); }
+Fix<F> Lam(Fix<TF> return_type, F<A> variable, A body) {
+	return Fx(F<Fix<F>>(Lambda<A>(body, boost::get<Variable>(variable).id, Arrow(boost::get<Variable>(variable).type, return_type))));
+}
 
 template<typename A = Fix<F>>
-Fix<F> Var(Fix<TF> t, char id) { return Fx(F<Fix<F>>(Variable{ t, id })); }
+Fix<F> Var(Fix<TF> type, char id) { return Fx(F<Fix<F>>(Variable{ type, id })); }
 
 template<typename A>
-Fix<F> Map(A a, A b) { return Fx(F<Fix<F>>(Map_<A>(a, b))); }
+Fix<F> Map(A lambda, A vector) { return Fx(F<Fix<F>>(Map_<A>(lambda, vector))); }
 
 template<typename A>
-Fix<F> Fold(A a, A b, A c) { return Fx(F<Fix<F>>(Fold_<A>(a, b, c))); }
+Fix<F> Fold(A lambda, A vector, A init) { return Fx(F<Fix<F>>(Fold_<A>(lambda, vector, init))); }
 
 template<typename A>
-Fix<F> Zip(A a, A b, A c) { return Fx(F<Fix<F>>(Zip_<A>(a, b, c))); }
+Fix<F> Zip(A lambda, A vector_1, A vector_2) { return Fx(F<Fix<F>>(Zip_<A>(lambda, vector_1, vector_2))); }
 
 Fix<TF> get_type(const Fix<F>& a);
 

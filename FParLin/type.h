@@ -16,7 +16,7 @@ struct Int_t {};
 struct Double_t {};
 
 struct Size_t {
-	int size;
+	unsigned size;
 };
 
 template<typename A>
@@ -78,7 +78,7 @@ Fix<TF> Double();
 
 Fix<TF> operator""_size(unsigned long long x);
 
-Fix<TF> Size(int x);
+Fix<TF> Size(unsigned x);
 
 //template<typename A>
 //Fix<TF> Product(A a, A b) { return Fx(TF<Fix<TF>>(Product_t<A>(a,b))); }

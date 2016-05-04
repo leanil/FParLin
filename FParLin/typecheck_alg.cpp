@@ -44,7 +44,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 				}
 			}
 		}
-		b.type = errors.empty() ? Power(get_type(*b.elements[0]), Size(b.elements.size())) : Invalid();
+		b.type = errors.empty() ? Power(get_type(*b.elements[0]), Size((unsigned)b.elements.size())) : Invalid();
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 

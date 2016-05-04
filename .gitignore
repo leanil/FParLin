@@ -252,6 +252,6 @@ _Pvt_Extensions
 .fake/
 Status API Training Shop Blog About Pricing
 © 2016 GitHub, Inc. Terms Privacy Security Contact Help
-/Eval/result.*
+/Eval/result*
 *.idb
 /Eval/eval

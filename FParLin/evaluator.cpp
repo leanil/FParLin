@@ -14,7 +14,10 @@
 
 using namespace std;
 
-bool process_tree(Fix<F> tree, int threshold) {
+static int result_id = 0;
+static string result_name;
+
+bool process_tree(Fix<F> tree, int threshold, bool restricted) {
 	typecheck_t checked = cata(typecheck_alg, tree);
 	if (!checked.second.empty()) {
 		cerr << "type mismatches were found:\n";
@@ -24,8 +27,8 @@ bool process_tree(Fix<F> tree, int threshold) {
 		return false;
 	}
 	checked.first = cata(costest_alg, checked.first);
-	string code = cata(codegen_alg(threshold), checked.first).first;
-	ofstream result("result.cpp");
+	string code = cata(codegen_alg(threshold, restricted), checked.first).first;
+	ofstream result(result_name + ".cpp");
 	vector<string> headers{ "\"fparlin.h\"", "<iostream>" , "<map>", "<string>", "<vector>" };
 	string signature = "std::vector<double> evaluator(std::map<std::string, std::vector<double>*> bigVectors)";
 	for (string header : headers) {
@@ -68,11 +71,11 @@ bool build_dll() {
 		vcvars += vcvars.empty() ? "" : " x86";
 #endif
 		vcvars += vcvars.empty() ? "" : " && ";
-		build_command = "\"" + vcvars + build_tool + " " + common + " " + configuration + " " + platform + " result.cpp\"";
+		build_command = "\"" + vcvars + build_tool + " " + common + " " + configuration + " " + platform + " " + result_name + ".cpp\"";
 	}
 	else if (build_tool.find("g++") != string::npos || build_tool.find("clang") != string::npos) {
 		build_command = build_tool +
-			" -shared -fPIC -std=c++14 -g -O3 -mavx -funsafe-math-optimizations -ffast-math result.cpp -pthread -o result.so";
+			" -shared -fPIC -std=c++14 -g -O3 -mavx -funsafe-math-optimizations -ffast-math " + result_name + ".cpp -pthread -o " + result_name + ".so";
 	}
 	cout << "building with:\n" << build_command << endl;
 	return !system(build_command.c_str());
@@ -82,7 +85,7 @@ using evaluator_t = vector<double>(*)(map<string, vector<double>*>);
 
 evaluator_t link_dll() {
 #ifdef _WIN32
-	HINSTANCE dll = LoadLibrary("result.dll");
+	HINSTANCE dll = LoadLibrary((result_name + ".dll").c_str());
 	if (!dll) {
 		cerr << "could not load dll: " << GetLastError() << endl;
 		return nullptr;
@@ -93,7 +96,7 @@ evaluator_t link_dll() {
 		return nullptr;
 	}
 #elif __linux__
-	void* dll = dlopen("./result.so", RTLD_NOW);
+	void* dll = dlopen((result_name + ".so").c_str(), RTLD_NOW);
 	if (!dll) {
 		cerr << "could not load dll: " << dlerror() << endl;
 		return nullptr;
@@ -109,10 +112,12 @@ evaluator_t link_dll() {
 	return (evaluator_t)evaluator;
 }
 
-function<vector<double>(map<string, vector<double>*>)> get_evaluator(Fix<F> tree, int threshold) {
+function<vector<double>(map<string, vector<double>*>)> get_evaluator(Fix<F> tree, int threshold, bool restricted) {
+	result_name = "result_" + to_string(result_id);
 	evaluator_t evaluator;
-	if (!process_tree(tree, threshold) || !build_dll() || !(evaluator = link_dll())) {
+	if (!process_tree(tree, threshold, restricted) || !build_dll() || !(evaluator = link_dll())) {
 		return function<vector<double>(map<string, vector<double>*>)>{};
 	}
+	++result_id;
 	return evaluator;
 }

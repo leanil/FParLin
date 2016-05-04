@@ -6,7 +6,8 @@
 
 struct codegen_alg_visitor : boost::static_visitor<codegen_t> {
 
-	codegen_alg_visitor(int threshold) : threshold{ threshold } {}
+	codegen_alg_visitor(int threshold, bool restricted) :
+		threshold{ threshold }, restricted{ restricted } {}
 
 	codegen_t operator()(Scalar i) const {
 		return{ to_string(i.value),false };
@@ -53,29 +54,30 @@ struct codegen_alg_visitor : boost::static_visitor<codegen_t> {
 
 	codegen_t operator()(Map_<codegen_t> e) const {
 		bool tmp = e.lambda().second || e.vector().second;
-		return{ (threshold && e.cost > threshold && !tmp ? "Par" : "") +
+		return{ (threshold && e.cost > threshold && (!tmp || !restricted) ? "Par" : "") +
 			("Map(" + e.lambda().first + "," + e.vector().first + ")"),
 			threshold && e.cost > threshold };
 	}
 
 	codegen_t operator()(Fold_<codegen_t> e) const {
 		bool tmp = e.lambda().second || e.vector().second || e.init().second;
-		return{ (threshold && e.cost > threshold && !tmp ? "Par" : "") +
+		return{ (threshold && e.cost > threshold && (!tmp || !restricted) ? "Par" : "") +
 			("Fold(" + e.lambda().first + "," + e.vector().first + "," + e.init().first + ")"),
 			threshold && e.cost > threshold };
 	}
 
 	codegen_t operator()(Zip_<codegen_t> e) const {
 		bool tmp = e.lambda().second || e.vector_1().second || e.vector_2().second;
-		return{ (threshold && e.cost > threshold && !tmp ? "Par" : "") +
+		return{ (threshold && e.cost > threshold && (!tmp || !restricted) ? "Par" : "") +
 			("Zip(" + e.lambda().first + "," + e.vector_1().first + "," + e.vector_2().first + ")"),
 			threshold && e.cost > threshold };
 	}
 
 	int threshold;
+	bool restricted;
 };
 
 
 codegen_t codegen_alg::operator()(F<codegen_t> e) {
-	return boost::apply_visitor(codegen_alg_visitor(threshold), e);
+	return boost::apply_visitor(codegen_alg_visitor(threshold, restricted), e);
 }

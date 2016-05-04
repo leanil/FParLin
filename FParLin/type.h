@@ -2,6 +2,8 @@
 #define TYPE_H
 
 #include "fix.h"
+//#include <type_traits>
+//template<typename T, typename U> using is_assignable = std::is_assignable<T, U>;
 #include <boost/variant/variant.hpp>
 #include <memory>
 
@@ -78,8 +80,8 @@ Fix<TF> operator""_size(unsigned long long x);
 
 Fix<TF> Size(int x);
 
-template<typename A>
-Fix<TF> Product(A a, A b) { return Fx(TF<Fix<TF>>(Product_t<A>(a,b))); }
+//template<typename A>
+//Fix<TF> Product(A a, A b) { return Fx(TF<Fix<TF>>(Product_t<A>(a,b))); }
 
 template<typename A>
 Fix<TF> Power(A a, A b) { return Fx(TF<Fix<TF>>(Power_t<A>(a, b))); }

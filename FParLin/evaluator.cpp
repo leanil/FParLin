@@ -87,7 +87,7 @@ evaluator_t link_dll() {
 #ifdef _WIN32
 	HINSTANCE dll = LoadLibrary((result_name + ".dll").c_str());
 	if (!dll) {
-		cerr << "could not load dll: " << GetLastError() << endl;
+		cerr << "could not load library: " << GetLastError() << endl;
 		return nullptr;
 	}
 	FARPROC evaluator = GetProcAddress(dll, "evaluator");
@@ -98,7 +98,7 @@ evaluator_t link_dll() {
 #elif __linux__
 	void* dll = dlopen(("./" + result_name + ".so").c_str(), RTLD_NOW);
 	if (!dll) {
-		cerr << "could not load dll: " << dlerror() << endl;
+		cerr << "could not load library: " << dlerror() << endl;
 		return nullptr;
 	}
 	dlerror();

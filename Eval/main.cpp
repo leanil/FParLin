@@ -1,4 +1,5 @@
 #include "big_test.h"
+#include "error_test.h"
 #include "evaluator.h"
 #include "functional_test.h"
 #include <algorithm>
@@ -10,13 +11,17 @@
 using namespace std;
 
 double measure_time(const function<vector<double>(map<string, vector<double>*>)>& evaluator, const map<string, vector<double>*>& bigVectors) {
-	auto start = chrono::high_resolution_clock::now();
-	auto result = evaluator(bigVectors);
-	auto done = chrono::high_resolution_clock::now();
-	return chrono::duration_cast<chrono::milliseconds>(done - start).count() / 1000.0;
+	double min_time = 999999;
+	for (int i = 0; i < 4; ++i) {
+		auto start = chrono::high_resolution_clock::now();
+		auto result = evaluator(bigVectors);
+		auto done = chrono::high_resolution_clock::now();
+		min_time = min(min_time, chrono::duration_cast<chrono::milliseconds>(done - start).count() / 1000.0);
+	}
+	return min_time;
 }
 
-int main() {
+void run_performance_test() {
 	default_random_engine rand;
 	uniform_real_distribution<> dist;
 	vector<double> *vec = new vector<double>(big_test_size), *row = new vector<double>(big_test_size);
@@ -24,7 +29,7 @@ int main() {
 	generate(vec->begin(), vec->end(), [&]() {return dist(rand); });
 	generate(row->begin(), row->end(), [&]() {return dist(rand); });
 	generate(vec_to_sum->begin(), vec_to_sum->end(), [&]() {return dist(rand); });
-	map<string, vector<double>*> bigVectors{ {"vec", vec}, {"row", row}, {"vec_to_sum", vec_to_sum} };
+	map<string, vector<double>*> bigVectors{ { "vec", vec },{ "row", row },{ "vec_to_sum", vec_to_sum } };
 
 	vector<double> times;
 	times.push_back(measure_time(get_evaluator(mat_vec_mul, 2000000000), bigVectors));
@@ -45,4 +50,12 @@ int main() {
 		<< "\nvector sum:\n"
 		<< "sequential: " << times[5] << endl
 		<< "parallel: " << times[6] << endl;
+}
+
+void run_error_test() {
+	get_evaluator(typeErrors, 1);
+}
+
+int main() {
+	run_performance_test();
 }

@@ -56,14 +56,6 @@ void run_error_test() {
 	get_evaluator(typeErrors, 1);
 }
 
-void run_functionality_test() {
-	auto evaluator = get_evaluator(testExpr6, 50);
-	map<string, vector<double>*> bigVectors{ { "vec", new vector<double>{ 7,8,9 } } };
-	auto result = evaluator(bigVectors);
-	cout << result << endl;
-}
-
 int main() {
-	//run_functionality_test();
 	run_performance_test();
 }

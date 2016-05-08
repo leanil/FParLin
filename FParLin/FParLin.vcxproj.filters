@@ -57,6 +57,9 @@
     <ClInclude Include="typeprinter_alg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="fparlin_exception.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="codegen_alg.cpp">

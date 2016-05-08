@@ -1,4 +1,5 @@
 #include "evaluator.h"
+#include "fparlin_exception.h"
 #include "codegen_alg.h"
 #include "costest_alg.h"
 #include "typecheck_alg.h"
@@ -17,14 +18,12 @@ using namespace std;
 static int result_id = 0;
 static string result_name;
 
-bool process_tree(Fix<F> tree, int threshold, bool restricted) {
+void process_tree(Fix<F> tree, int threshold, bool restricted) {
 	typecheck_t checked = cata(typecheck_alg, tree);
 	if (!checked.second.empty()) {
-		cerr << "type mismatches were found:\n";
-		for (string error : checked.second) {
-			cerr << error << endl;
-		}
-		return false;
+		throw type_mismatch_excetion(
+			to_string(checked.second.size()) + " type mismatches were found.",
+			checked.second);
 	}
 	checked.first = cata(costest_alg, checked.first);
 	string code = cata(codegen_alg(threshold, restricted), checked.first).first;
@@ -41,10 +40,9 @@ bool process_tree(Fix<F> tree, int threshold, bool restricted) {
 		<< signature << ";\n}\n\n"
 		<< signature << " {\n\t\treturn vectorize(" << code << ");\n}\n";
 	result.close();
-	return true;
 }
 
-bool build_dll() {
+void build_dll() {
 #ifdef _WIN32
 	ifstream config("config_windows.txt");
 #elif __linux__
@@ -77,8 +75,10 @@ bool build_dll() {
 		build_command = build_tool +
 			" -shared -fPIC -std=c++14 -g -O3 -mavx -funsafe-math-optimizations -ffast-math " + result_name + ".cpp -pthread -o " + result_name + ".so";
 	}
-	cout << "building with:\n" << build_command << endl;
-	return !system(build_command.c_str());
+	//cout << "building with:\n" << build_command << endl;
+	if (system((build_command + " > build.out 2>&1").c_str())) {
+		throw compile_exception{ "Failed to build the evaluator. See build.out for more information."s };
+	}
 }
 
 using evaluator_t = vector<double>(*)(map<string, vector<double>*>);
@@ -87,26 +87,22 @@ evaluator_t link_dll() {
 #ifdef _WIN32
 	HINSTANCE dll = LoadLibrary((result_name + ".dll").c_str());
 	if (!dll) {
-		cerr << "could not load library: " << GetLastError() << endl;
-		return nullptr;
+		throw dll_exception{ "could not load library: " + to_string(GetLastError()) };
 	}
 	FARPROC evaluator = GetProcAddress(dll, "evaluator");
 	if (!evaluator) {
-		cerr << "could not get function address: " << GetLastError() << endl;
-		return nullptr;
+		throw dll_exception{ "could not get function address: " + to_string(GetLastError()) };
 	}
 #elif __linux__
 	void* dll = dlopen(("./" + result_name + ".so").c_str(), RTLD_NOW);
 	if (!dll) {
-		cerr << "could not load library: " << dlerror() << endl;
-		return nullptr;
+		throw dll_exception{ "could not load library: "s + dlerror() };
 	}
 	dlerror();
 	void* evaluator = dlsym(dll, "evaluator");
 	auto error = dlerror();
 	if (error) {
-		cerr << "could not get function address: " << error << endl;
-		return nullptr;
+		throw dll_exception{ "could not get function address: "s + error };
 	}
 #endif
 	return (evaluator_t)evaluator;
@@ -114,10 +110,9 @@ evaluator_t link_dll() {
 
 function<vector<double>(map<string, vector<double>*>)> get_evaluator(Fix<F> tree, int threshold, bool restricted) {
 	result_name = "result_" + to_string(result_id);
-	evaluator_t evaluator;
-	if (!process_tree(tree, threshold, restricted) || !build_dll() || !(evaluator = link_dll())) {
-		return function<vector<double>(map<string, vector<double>*>)>{};
-	}
+	process_tree(tree, threshold, restricted);
+	build_dll();
+	evaluator_t evaluator = link_dll();
 	++result_id;
 	return evaluator;
 }

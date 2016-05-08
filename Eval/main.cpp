@@ -1,6 +1,7 @@
 #include "big_test.h"
 #include "error_test.h"
 #include "evaluator.h"
+#include "fparlin_exception.h"
 #include "functional_test.h"
 #include <algorithm>
 #include <chrono>
@@ -57,5 +58,16 @@ void run_error_test() {
 }
 
 int main() {
-	run_performance_test();
+	try {
+		run_performance_test();
+	}
+	catch (const type_mismatch_excetion& e) {
+		cout << e.what << endl;
+		for (string error : e.errors) {
+			cout << error << endl;
+		}
+	}
+	catch (const FParLin_exception& e) {
+		cout << e.what << endl;
+	}
 }

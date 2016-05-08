@@ -54,8 +54,8 @@ struct functor_visitor<Fun, F<A>>
 		return Map_<B>(f(e.lambda()), f(e.vector()), e.values, e.subst, e.type, e.cost);
 	}
 
-	F<B> operator()(Fold_<A> e) const {
-		return Fold_<B>(f(e.lambda()), f(e.vector()), f(e.init()), e.values, e.subst, e.type, e.cost);
+	F<B> operator()(Reduce_<A> e) const {
+		return Reduce_<B>(f(e.lambda()), f(e.vector()), e.values, e.subst, e.type, e.cost);
 	}
 
 	F<B> operator()(Zip_<A> e) const {

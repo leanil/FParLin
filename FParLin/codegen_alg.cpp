@@ -59,10 +59,10 @@ struct codegen_alg_visitor : boost::static_visitor<codegen_t> {
 			threshold && e.cost > threshold };
 	}
 
-	codegen_t operator()(Fold_<codegen_t> e) const {
-		bool tmp = e.lambda().second || e.vector().second || e.init().second;
+	codegen_t operator()(Reduce_<codegen_t> e) const {
+		bool tmp = e.lambda().second || e.vector().second;
 		return{ (threshold && e.cost > threshold && (!tmp || !restricted) ? "Par" : "") +
-			("Fold(" + e.lambda().first + "," + e.vector().first + "," + e.init().first + ")"),
+			("Reduce(" + e.lambda().first + "," + e.vector().first + ")"),
 			threshold && e.cost > threshold };
 	}
 

@@ -135,16 +135,14 @@ struct Map_ {
 };
 
 template<typename A>
-struct Fold_ {
-	Fold_(A lambda, A vector, A init) : lambda_(new A(lambda)), vector_(new A(vector)), init_(new A(init)) {}
-	Fold_(A lambda, A vector, A init, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst, Fix<TF> type, int cost) :
-		lambda_(new A(lambda)), vector_(new A(vector)), init_(new A(init)), values{ values }, subst{ subst }, type{ type }, cost{ cost } {}
+struct Reduce_ {
+	Reduce_(A lambda, A vector) : lambda_(new A(lambda)), vector_(new A(vector)) {}
+	Reduce_(A lambda, A vector, const stack<shared_ptr<Fix<F>>>& values, const map<char, shared_ptr<Fix<F>>>& subst, Fix<TF> type, int cost) :
+		lambda_(new A(lambda)), vector_(new A(vector)), values{ values }, subst{ subst }, type{ type }, cost{ cost } {}
 	A& lambda() { return *lambda_; }
 	A& vector() { return *vector_; }
-	A& init() { return *init_; }
 	shared_ptr<A> lambda_;
 	shared_ptr<A> vector_;
-	shared_ptr<A> init_;
 	stack<shared_ptr<Fix<F>>> values;
 	map<char, shared_ptr<Fix<F>>> subst;
 	Fix<TF> type;
@@ -180,7 +178,7 @@ boost::variant<
 	Lambda<A>,
 	Variable,
 	Map_<A>,
-	Fold_<A>,
+	Reduce_<A>,
 	Zip_<A>
 >;
 
@@ -196,7 +194,7 @@ struct F : ExprF<A> {
 	F(Lambda<A> c) : ExprF<A>(c) {}
 	F(Variable c) : ExprF<A>(c) {}
 	F(Map_<A> c) : ExprF<A>(c) {}
-	F(Fold_<A> c) : ExprF<A>(c) {}
+	F(Reduce_<A> c) : ExprF<A>(c) {}
 	F(Zip_<A> c) : ExprF<A>(c) {}
 };
 
@@ -232,7 +230,7 @@ template<typename A>
 Fix<F> Map(A lambda, A vector) { return Fx(F<Fix<F>>(Map_<A>(lambda, vector))); }
 
 template<typename A>
-Fix<F> Fold(A lambda, A vector, A init) { return Fx(F<Fix<F>>(Fold_<A>(lambda, vector, init))); }
+Fix<F> Reduce(A lambda, A vector) { return Fx(F<Fix<F>>(Reduce_<A>(lambda, vector))); }
 
 template<typename A>
 Fix<F> Zip(A lambda, A vector_1, A vector_2) { return Fx(F<Fix<F>>(Zip_<A>(lambda, vector_1, vector_2))); }

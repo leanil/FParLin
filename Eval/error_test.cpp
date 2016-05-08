@@ -30,17 +30,15 @@ Map(
 	VecView("vec", 1));
 
 Fix<F> typeError8 =
-Fold(
+Reduce(
 	Lam(double_to_double, x, 0_scl),
-	0_scl,
 	0_scl);
 
 Fix<F> typeError9 =
-Fold(
+Reduce(
 	Lam(double_to_double, Var(Power(Double(), 1_size), 'x'),
 		Lam(Double(), y, 0_scl)),
-	Vec({ Var(Int(), 'x') }),
-	0_scl);
+	Vec({ Var(Int(), 'x') }));
 
 Fix<F> typeError10 =
 Zip(

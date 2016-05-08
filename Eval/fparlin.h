@@ -32,9 +32,9 @@ auto Map(const F& f, const vector<E>& v) {
 	return result;
 }
 
-template<typename F, typename E, typename S>
-S Fold(const F& f, const vector<E>& v, const S& s) {
-	return accumulate(v.begin(), v.end(), s, [&](const S& s, const E& e) {return f(s)(e); });
+template<typename F, typename E>
+E Reduce(const F& f, const vector<E>& v) {
+	return accumulate(v.begin() + 1, v.end(), v.front(), [&](const E& s, const E& e) {return f(s)(e); });
 }
 
 template<typename F, typename A, typename B>
@@ -66,11 +66,11 @@ auto ParMap(const F& f, const vector<E>& v) {
 	return result;
 }
 
-template<typename F, typename E, typename S>
-S ParFold(const F& f, const vector<E>& v, const S& s) {
-	auto f2 = [&](const S& s, const E& e) {return f(s)(e); };
+template<typename F, typename E>
+E ParReduce(const F& f, const vector<E>& v) {
+	auto f2 = [&](const E& s, const E& e) {return f(s)(e); };
 	unsigned batch = batch_size(v);
-	vector<S> results(thread::hardware_concurrency());
+	vector<E> results(thread::hardware_concurrency());
 	vector<thread> threads;
 	threads.reserve(thread::hardware_concurrency());
 	for (unsigned i = 0; i < v.size(); i += batch) {
@@ -80,7 +80,7 @@ S ParFold(const F& f, const vector<E>& v, const S& s) {
 	for (thread& t : threads) {
 		t.join();
 	}
-	return accumulate(results.begin(), results.end(), s, f2);
+	return accumulate(results.begin() + 1, results.end(), results.front(), f2);
 }
 
 template<typename F, typename A, typename B>

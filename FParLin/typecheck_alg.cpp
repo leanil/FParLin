@@ -155,12 +155,11 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 
-	typecheck_t operator()(Fold_<typecheck_t> a) const {
+	typecheck_t operator()(Reduce_<typecheck_t> a) const {
 		list<string> errors;
 		errors.insert(errors.end(), a.lambda().second.begin(), a.lambda().second.end());
 		errors.insert(errors.end(), a.vector().second.begin(), a.vector().second.end());
-		errors.insert(errors.end(), a.init().second.begin(), a.init().second.end());
-		Fold_<Fix<F>> b(a.lambda().first, a.vector().first, a.init().first, a.values, a.subst, a.type, a.cost);
+		Reduce_<Fix<F>> b(a.lambda().first, a.vector().first, a.values, a.subst, a.type, a.cost);
 		if (errors.empty()) {
 			if (!is_of_type<Arrow_t<Fix<TF>>>(b.lambda()) ||
 				!is_of_type<Arrow_t<Fix<TF>>>(boost::get<Arrow_t<Fix<TF>>>(get_type(b.lambda())).right())) {
@@ -176,19 +175,21 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 			string param1_type = cata(typeprinter_alg, lambda1_type.left());
 			string param2_type = cata(typeprinter_alg, lambda2_type.left());
 			string result_type = cata(typeprinter_alg, lambda2_type.right());
-			string init_type = cata(typeprinter_alg, get_type(b.init()));
 			auto vector_type = boost::get<Power_t<Fix<TF>>>(get_type(b.vector()));
 			string input_type = cata(typeprinter_alg, vector_type.left());
-			if (param1_type != init_type) {
-				errors.push_back(param1_type + " != " + init_type);
+			if (boost::get<Size_t>(vector_type.right()).size == 0) {
+				errors.push_back(cata(typeprinter_alg, get_type(b.vector())) + " is an empty vector");
+			}
+			if (param1_type != input_type) {
+				errors.push_back(param1_type + " != " + input_type);
 			}
 			if (param2_type != input_type) {
 				errors.push_back(param2_type + " != " + input_type);
 			}
-			if (result_type != init_type) {
-				errors.push_back(result_type + " != " + init_type);
+			if (result_type != input_type) {
+				errors.push_back(result_type + " != " + input_type);
 			}
-			b.type = errors.empty() ? get_type(b.init()) : Invalid();
+			b.type = errors.empty() ? vector_type.left() : Invalid();
 		}
 		return{ Fx((F<Fix<F>>)b), errors };
 	}

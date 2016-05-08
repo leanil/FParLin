@@ -43,7 +43,7 @@ auto v = Var(Power(Double(), 3_size), 'v');
 Fix<F> testExpr6 =
 Map(
 	Lam(Double(), v,
-		Fold(
+		Reduce(
 			Lam(double_to_double, x,
 				Lam(Double(), y,
 					x + y)),
@@ -52,8 +52,7 @@ Map(
 					Lam(Double(), y,
 						x * y)),
 				v,
-				VecView("vec", 3)),
-			0_scl)),
+				VecView("vec", 3)))),
 	Vec({
 		Vec({ 1_scl, 2_scl, 3_scl }),
 		Vec({ 4_scl, 5_scl, 6_scl }) }));

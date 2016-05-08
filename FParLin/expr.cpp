@@ -20,7 +20,7 @@ struct type_getter : boost::static_visitor<Fix<TF>> {
 	Fix<TF> operator()(Lambda<Fix<F>> a) const { return a.type; }
 	Fix<TF> operator()(Variable a) const { return a.type; }
 	Fix<TF> operator()(Map_<Fix<F>> a) const { return a.type; }
-	Fix<TF> operator()(Fold_<Fix<F>> a) const { return a.type; }
+	Fix<TF> operator()(Reduce_<Fix<F>> a) const { return a.type; }
 	Fix<TF> operator()(Zip_<Fix<F>> a) const { return a.type; }
 };
 
@@ -34,7 +34,7 @@ struct cost_getter : boost::static_visitor<int> {
 	int operator()(Lambda<Fix<F>> a) const { return a.cost; }
 	int operator()(Variable a) const { return a.cost; }
 	int operator()(Map_<Fix<F>> a) const { return a.cost; }
-	int operator()(Fold_<Fix<F>> a) const { return a.cost; }
+	int operator()(Reduce_<Fix<F>> a) const { return a.cost; }
 	int operator()(Zip_<Fix<F>> a) const { return a.cost; }
 };
 

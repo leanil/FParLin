@@ -45,7 +45,7 @@ struct annotation_copy_visitor : boost::static_visitor<void> {
 		e.subst = subst;
 	}
 
-	void operator()(Fold_<Fix<F>>& e) const {
+	void operator()(Reduce_<Fix<F>>& e) const {
 		e.values = values;
 		e.subst = subst;
 	}
@@ -115,7 +115,7 @@ struct coalg_visitor : boost::static_visitor<F<Fix<F>>> {
 		return e;
 	}
 
-	F<Fix<F>> operator()(Fold_<Fix<F>> e) const {
+	F<Fix<F>> operator()(Reduce_<Fix<F>> e) const {
 		//TODO: Inplace evaluation not implemented.
 		return e;
 	}

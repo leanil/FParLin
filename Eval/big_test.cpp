@@ -8,7 +8,7 @@ static auto row = VecView("row", big_test_size);
 
 // R^(16 x size) * R^size
 Fix<F> mat_vec_mul =
-Fold(
+Reduce(
 	Lam(double_to_double, x,
 		Lam(Double(), y,
 			x + y)),
@@ -16,7 +16,7 @@ Fold(
 		Lam(Double(), x, x + 1_scl),
 		Map(
 			Lam(Double(), v,
-				Fold(
+				Reduce(
 					Lam(double_to_double, x,
 						Lam(Double(), y,
 							x + y)),
@@ -25,16 +25,12 @@ Fold(
 							Lam(Double(), y,
 								x * y)),
 						v,
-						VecView("vec", big_test_size)),
-					0_scl)),
-			Vec({row, row, row, row, row, row, row, row, row, row, row, row, row, row, row, row, }))),
-	0_scl);
+						VecView("vec", big_test_size)))),
+			Vec({row, row, row, row, row, row, row, row, row, row, row, row, row, row, row, row, }))));
 
 Fix<F> vec_sum =
-Fold(
+Reduce(
 	Lam(double_to_double, x,
 		Lam(Double(), y,
 			x + y)),
-	VecView("vec_to_sum", 100000000),
-	0_scl
-);
+	VecView("vec_to_sum", 100000000));

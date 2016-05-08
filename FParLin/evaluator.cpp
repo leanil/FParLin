@@ -19,18 +19,34 @@ static string result_name;
 
 bool process_tree(Fix<F> tree, int threshold, bool restricted) {
 	typecheck_t checked = cata(typecheck_alg, tree);
-	if (!checked.second.empty()) {
+	if (!checked.second.errors.empty()) {
 		cerr << "type mismatches were found:\n";
-		for (string error : checked.second) {
+		for (string error : checked.second.errors) {
 			cerr << error << endl;
 		}
 		return false;
 	}
+	for (const auto& p : checked.second.results) {
+		cout << (p.first.first == element_type::DOUBLE ? "D" : "V") << " " << p.first.second << " " << p.second <<endl;
+	}
+	string sizes;
+	for (const auto& p : checked.second.results) {
+		auto& vec = p.first;
+		unsigned bytes = vec.second;
+		switch (vec.first) {
+		case element_type::INT: bytes *= sizeof(int); break;
+		case element_type::DOUBLE: bytes *= sizeof(double); break;
+		case element_type::VECTOR: bytes *= sizeof(vector<int>); break;
+		}
+		sizes += "{" + to_string(bytes) + "," + to_string(p.second) + "},";
+	}
+	sizes += "{" + to_string(sizeof(double)) + ",1}"; //for the final vectorize
+
 	checked.first = cata(costest_alg, checked.first);
 	string code = cata(codegen_alg(threshold, restricted), checked.first).first;
 	ofstream result(result_name + ".cpp");
-	vector<string> headers{ "\"fparlin.h\"", "<iostream>" , "<map>", "<string>", "<vector>" };
-	string signature = "std::vector<double> evaluator(std::map<std::string, std::vector<double>*> bigVectors)";
+	vector<string> headers{ "\"fparlin.hpp\"", "<iostream>" , "<map>", "<string>", "<vector>" };
+	string signature = "std::vector<double, custom_allocator<double>> evaluator(std::map<std::string, std::vector<double>*> bigVectors)";
 	for (string header : headers) {
 		result << "#include " << header << endl;
 	}
@@ -39,7 +55,8 @@ bool process_tree(Fix<F> tree, int threshold, bool restricted) {
 		<< "__declspec(dllexport) "
 #endif
 		<< signature << ";\n}\n\n"
-		<< signature << " {\n\t\treturn vectorize(" << code << ");\n}\n";
+		<< signature << " {\n\tstatic Preallocator prealloc({" << sizes << "});\n"
+		<< "\tprealloc.reset();\n\treturn vectorize(" << code << ");\n}\n";
 	result.close();
 	return true;
 }

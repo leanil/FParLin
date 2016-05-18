@@ -14,25 +14,25 @@ using namespace std;
 
 struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 
-	typecheck_t operator()(Scalar a) const {
-		a.type = Double();
-		return{ Fx((F<Fix<F>>)a), list<string>() };
+	typecheck_t operator()(Scalar node) const {
+		node.type = Double();
+		return{ Fx((F<Fix<F>>)node), list<string>() };
 	}
 
-	typecheck_t operator()(VectorView a) const {
-		a.type = Power(Double(), Size(a.size));
-		return{ Fx((F<Fix<F>>)a), list<string>() };
+	typecheck_t operator()(VectorView node) const {
+		node.type = Power(Double(), Size(node.size));
+		return{ Fx((F<Fix<F>>)node), list<string>() };
 	}
 
-	typecheck_t operator()(Vector<typecheck_t> a) const {
+	typecheck_t operator()(Vector<typecheck_t> node) const {
 		list<string> errors;
-		for (auto e : a.elements) {
+		for (auto e : node.elements) {
 			errors.insert(errors.end(), e->second.begin(), e->second.end());
 		}
 		vector<Fix<F>> elements;
-		transform(a.elements.begin(), a.elements.end(), back_inserter(elements),
+		transform(node.elements.begin(), node.elements.end(), back_inserter(elements),
 			[](shared_ptr<typecheck_t> p) {return p->first; });
-		Vector<Fix<F>> b(elements, a.values, a.subst, a.type, a.cost);
+		Vector<Fix<F>> b(elements, node.values, node.subst, node.type, node.cost);
 		if (errors.empty()) {
 			string type_str = cata(typeprinter_alg, get_type(*b.elements[0]));
 			unsigned i;
@@ -48,11 +48,11 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 
-	typecheck_t operator()(Addition<typecheck_t> a) const {
+	typecheck_t operator()(Addition<typecheck_t> node) const {
 		list<string> errors;
-		errors.insert(errors.end(), a.left().second.begin(), a.left().second.end());
-		errors.insert(errors.end(), a.right().second.begin(), a.right().second.end());
-		Addition<Fix<F>> b(a.left().first, a.right().first, a.values, a.subst, a.type, a.cost);
+		errors.insert(errors.end(), node.left().second.begin(), node.left().second.end());
+		errors.insert(errors.end(), node.right().second.begin(), node.right().second.end());
+		Addition<Fix<F>> b(node.left().first, node.right().first, node.values, node.subst, node.type, node.cost);
 		if (errors.empty()) {
 			if (!is_of_type<Int_t>(b.left()) && !is_of_type<Double_t>(b.left())) {
 				errors.push_back(cata(typeprinter_alg, get_type(b.left())) + " not scalar");
@@ -68,11 +68,11 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 
-	typecheck_t operator()(Multiplication<typecheck_t> a) const {
+	typecheck_t operator()(Multiplication<typecheck_t> node) const {
 		list<string> errors;
-		errors.insert(errors.end(), a.left().second.begin(), a.left().second.end());
-		errors.insert(errors.end(), a.right().second.begin(), a.right().second.end());
-		Multiplication<Fix<F>> b(a.left().first, a.right().first, a.values, a.subst, a.type, a.cost);
+		errors.insert(errors.end(), node.left().second.begin(), node.left().second.end());
+		errors.insert(errors.end(), node.right().second.begin(), node.right().second.end());
+		Multiplication<Fix<F>> b(node.left().first, node.right().first, node.values, node.subst, node.type, node.cost);
 		if (errors.empty()) {
 			if (!is_of_type<Int_t>(b.left()) && !is_of_type<Double_t>(b.left())) {
 				errors.push_back(cata(typeprinter_alg, get_type(b.left())) + " not scalar");
@@ -88,11 +88,11 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 
-	typecheck_t operator()(Apply<typecheck_t> a) const {
+	typecheck_t operator()(Apply<typecheck_t> node) const {
 		list<string> errors;
-		errors.insert(errors.end(), a.lambda().second.begin(), a.lambda().second.end());
-		errors.insert(errors.end(), a.input().second.begin(), a.input().second.end());
-		Apply<Fix<F>> b(a.lambda().first, a.input().first, a.values, a.subst, a.type, a.cost);
+		errors.insert(errors.end(), node.lambda().second.begin(), node.lambda().second.end());
+		errors.insert(errors.end(), node.input().second.begin(), node.input().second.end());
+		Apply<Fix<F>> b(node.lambda().first, node.input().first, node.values, node.subst, node.type, node.cost);
 		if (errors.empty()) {
 			if (!is_of_type<Arrow_t<Fix<TF>>>(b.lambda())) {
 				errors.push_back(cata(typeprinter_alg, get_type(b.lambda())) + " not a lambda");
@@ -110,9 +110,9 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 
-	typecheck_t operator()(Lambda<typecheck_t> a) const {
-		list<string> errors(a.body().second);
-		Lambda<Fix<F>> b(a.body().first, a.id, a.values, a.subst, a.type, a.cost);
+	typecheck_t operator()(Lambda<typecheck_t> node) const {
+		list<string> errors(node.body().second);
+		Lambda<Fix<F>> b(node.body().first, node.id, node.values, node.subst, node.type, node.cost);
 		if (errors.empty()) {
 			auto lambda_type = boost::get<Arrow_t<Fix<TF>>>(b.type);
 			string return_type = cata(typeprinter_alg, lambda_type.right());
@@ -125,15 +125,15 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 
-	typecheck_t operator()(Variable a) const {
-		return{ Fx((F<Fix<F>>)a), list<string>() };
+	typecheck_t operator()(Variable node) const {
+		return{ Fx((F<Fix<F>>)node), list<string>() };
 	}
 
-	typecheck_t operator()(Map_<typecheck_t> a) const {
+	typecheck_t operator()(Map_<typecheck_t> node) const {
 		list<string> errors;
-		errors.insert(errors.end(), a.lambda().second.begin(), a.lambda().second.end());
-		errors.insert(errors.end(), a.vector().second.begin(), a.vector().second.end());
-		Map_<Fix<F>> b(a.lambda().first, a.vector().first, a.values, a.subst, a.type, a.cost);
+		errors.insert(errors.end(), node.lambda().second.begin(), node.lambda().second.end());
+		errors.insert(errors.end(), node.vector().second.begin(), node.vector().second.end());
+		Map_<Fix<F>> b(node.lambda().first, node.vector().first, node.values, node.subst, node.type, node.cost);
 		if (errors.empty()) {
 			if (!is_of_type<Arrow_t<Fix<TF>>>(b.lambda())) {
 				errors.push_back(cata(typeprinter_alg, get_type(b.lambda())) + " not a lambda");
@@ -155,11 +155,11 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 
-	typecheck_t operator()(Reduce_<typecheck_t> a) const {
+	typecheck_t operator()(Reduce_<typecheck_t> node) const {
 		list<string> errors;
-		errors.insert(errors.end(), a.lambda().second.begin(), a.lambda().second.end());
-		errors.insert(errors.end(), a.vector().second.begin(), a.vector().second.end());
-		Reduce_<Fix<F>> b(a.lambda().first, a.vector().first, a.values, a.subst, a.type, a.cost);
+		errors.insert(errors.end(), node.lambda().second.begin(), node.lambda().second.end());
+		errors.insert(errors.end(), node.vector().second.begin(), node.vector().second.end());
+		Reduce_<Fix<F>> b(node.lambda().first, node.vector().first, node.values, node.subst, node.type, node.cost);
 		if (errors.empty()) {
 			if (!is_of_type<Arrow_t<Fix<TF>>>(b.lambda()) ||
 				!is_of_type<Arrow_t<Fix<TF>>>(boost::get<Arrow_t<Fix<TF>>>(get_type(b.lambda())).right())) {
@@ -194,12 +194,12 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_t> {
 		return{ Fx((F<Fix<F>>)b), errors };
 	}
 
-	typecheck_t operator()(Zip_<typecheck_t> a) const {
+	typecheck_t operator()(Zip_<typecheck_t> node) const {
 		list<string> errors;
-		errors.insert(errors.end(), a.lambda().second.begin(), a.lambda().second.end());
-		errors.insert(errors.end(), a.vector_1().second.begin(), a.vector_1().second.end());
-		errors.insert(errors.end(), a.vector_2().second.begin(), a.vector_2().second.end());
-		Zip_<Fix<F>> b(a.lambda().first, a.vector_1().first, a.vector_2().first, a.values, a.subst, a.type, a.cost);
+		errors.insert(errors.end(), node.lambda().second.begin(), node.lambda().second.end());
+		errors.insert(errors.end(), node.vector_1().second.begin(), node.vector_1().second.end());
+		errors.insert(errors.end(), node.vector_2().second.begin(), node.vector_2().second.end());
+		Zip_<Fix<F>> b(node.lambda().first, node.vector_1().first, node.vector_2().first, node.values, node.subst, node.type, node.cost);
 		if (errors.empty()) {
 			if (!is_of_type<Arrow_t<Fix<TF>>>(b.lambda()) ||
 				!is_of_type<Arrow_t<Fix<TF>>>(boost::get<Arrow_t<Fix<TF>>>(get_type(b.lambda())).right())) {

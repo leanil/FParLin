@@ -9,68 +9,68 @@ struct codegen_alg_visitor : boost::static_visitor<codegen_t> {
 	codegen_alg_visitor(int threshold, bool restricted) :
 		threshold{ threshold }, restricted{ restricted } {}
 
-	codegen_t operator()(Scalar i) const {
-		return{ to_string(i.value),false };
+	codegen_t operator()(Scalar node) const {
+		return{ to_string(node.value),false };
 	}
 
-	codegen_t operator()(VectorView i) const {
-		return{ "*bigVectors.at(\"" + i.id + "\")", false };
+	codegen_t operator()(VectorView node) const {
+		return{ "*bigVectors.at(\"" + node.id + "\")", false };
 	}
 
-	codegen_t operator()(Vector<codegen_t> e) const {
+	codegen_t operator()(Vector<codegen_t> node) const {
 		string tmp = "make_vector({";
-		for (auto element : e.elements) {
+		for (auto element : node.elements) {
 			tmp += element->first + ',';
 		}
 		tmp.pop_back();
 		tmp += "})";
 		return{ tmp,
-			any_of(e.elements.begin(), e.elements.end(), [](shared_ptr<codegen_t> p) {return p->second; }) };
+			any_of(node.elements.begin(), node.elements.end(), [](shared_ptr<codegen_t> p) {return p->second; }) };
 	}
 
-	codegen_t operator()(Addition<codegen_t> e) const {
-		return{ '(' + e.left().first + ")+(" + e.right().first + ')',
-			e.left().second || e.right().second };
+	codegen_t operator()(Addition<codegen_t> node) const {
+		return{ '(' + node.left().first + ")+(" + node.right().first + ')',
+			node.left().second || node.right().second };
 	}
 
-	codegen_t operator()(Multiplication<codegen_t> e) const {
-		return{ '(' + e.left().first + ")*(" + e.right().first + ')',
-			e.left().second || e.right().second };
+	codegen_t operator()(Multiplication<codegen_t> node) const {
+		return{ '(' + node.left().first + ")*(" + node.right().first + ')',
+			node.left().second || node.right().second };
 	}
 
-	codegen_t operator()(Apply<codegen_t> e) const {
-		return{ e.lambda().first + '(' + e.input().first + ')',
-			e.lambda().second || e.input().second };
+	codegen_t operator()(Apply<codegen_t> node) const {
+		return{ node.lambda().first + '(' + node.input().first + ')',
+			node.lambda().second || node.input().second };
 	}
 
-	codegen_t operator()(Lambda<codegen_t> e) const {
-		return{ string("[&](const auto& ") + e.id + "){return " + e.body().first + ";}",
-			e.body().second };
+	codegen_t operator()(Lambda<codegen_t> node) const {
+		return{ string("[&](const auto& ") + node.id + "){return " + node.body().first + ";}",
+			node.body().second };
 	}
 
-	codegen_t operator()(Variable e) const {
-		return{ string(1,e.id), false };
+	codegen_t operator()(Variable node) const {
+		return{ string(1,node.id), false };
 	}
 
-	codegen_t operator()(Map_<codegen_t> e) const {
-		bool tmp = e.lambda().second || e.vector().second;
-		return{ (threshold && e.cost > threshold && (!tmp || !restricted) ? "Par" : "") +
-			("Map(" + e.lambda().first + "," + e.vector().first + ")"),
-			threshold && e.cost > threshold };
+	codegen_t operator()(Map_<codegen_t> node) const {
+		bool tmp = node.lambda().second || node.vector().second;
+		return{ (threshold && node.cost > threshold && (!tmp || !restricted) ? "Par" : "") +
+			("Map(" + node.lambda().first + "," + node.vector().first + ")"),
+			threshold && node.cost > threshold };
 	}
 
-	codegen_t operator()(Reduce_<codegen_t> e) const {
-		bool tmp = e.lambda().second || e.vector().second;
-		return{ (threshold && e.cost > threshold && (!tmp || !restricted) ? "Par" : "") +
-			("Reduce(" + e.lambda().first + "," + e.vector().first + ")"),
-			threshold && e.cost > threshold };
+	codegen_t operator()(Reduce_<codegen_t> node) const {
+		bool tmp = node.lambda().second || node.vector().second;
+		return{ (threshold && node.cost > threshold && (!tmp || !restricted) ? "Par" : "") +
+			("Reduce(" + node.lambda().first + "," + node.vector().first + ")"),
+			threshold && node.cost > threshold };
 	}
 
-	codegen_t operator()(Zip_<codegen_t> e) const {
-		bool tmp = e.lambda().second || e.vector_1().second || e.vector_2().second;
-		return{ (threshold && e.cost > threshold && (!tmp || !restricted) ? "Par" : "") +
-			("Zip(" + e.lambda().first + "," + e.vector_1().first + "," + e.vector_2().first + ")"),
-			threshold && e.cost > threshold };
+	codegen_t operator()(Zip_<codegen_t> node) const {
+		bool tmp = node.lambda().second || node.vector_1().second || node.vector_2().second;
+		return{ (threshold && node.cost > threshold && (!tmp || !restricted) ? "Par" : "") +
+			("Zip(" + node.lambda().first + "," + node.vector_1().first + "," + node.vector_2().first + ")"),
+			threshold && node.cost > threshold };
 	}
 
 	int threshold;
@@ -78,6 +78,6 @@ struct codegen_alg_visitor : boost::static_visitor<codegen_t> {
 };
 
 
-codegen_t codegen_alg::operator()(F<codegen_t> e) {
-	return boost::apply_visitor(codegen_alg_visitor(threshold, restricted), e);
+codegen_t codegen_alg::operator()(F<codegen_t> node) {
+	return boost::apply_visitor(codegen_alg_visitor(threshold, restricted), node);
 }

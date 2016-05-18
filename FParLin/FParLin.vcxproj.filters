@@ -15,22 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="coalg.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="codegen_alg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="const.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="costest_alg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="evaluator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="evaluator_alg.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="expr.h">
@@ -83,5 +74,8 @@
     <ClCompile Include="type.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="exceptions.cd" />
   </ItemGroup>
 </Project>

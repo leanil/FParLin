@@ -21,14 +21,14 @@ static string result_name;
 void process_tree(Fix<F> tree, int threshold, bool restricted) {
 	typecheck_t checked = cata(typecheck_alg, tree);
 	if (!checked.second.empty()) {
-		throw type_mismatch_excetion(
+		throw type_mismatch_exception(
 			to_string(checked.second.size()) + " type mismatches were found.",
 			checked.second);
 	}
 	checked.first = cata(costest_alg, checked.first);
 	string code = cata(codegen_alg(threshold, restricted), checked.first).first;
 	ofstream result(result_name + ".cpp");
-	vector<string> headers{ "\"fparlin.h\"", "<iostream>" , "<map>", "<string>", "<vector>" };
+	vector<string> headers{ "\"fparlin.h\"", "<map>", "<string>", "<vector>" };
 	string signature = "std::vector<double> evaluator(std::map<std::string, std::vector<double>*> bigVectors)";
 	for (string header : headers) {
 		result << "#include " << header << endl;
@@ -42,12 +42,8 @@ void process_tree(Fix<F> tree, int threshold, bool restricted) {
 	result.close();
 }
 
-void build_dll() {
-#ifdef _WIN32
-	ifstream config("config_windows.txt");
-#elif __linux__
-	ifstream config("config_linux.txt");
-#endif
+void build_library() {
+	ifstream config("config.txt");
 	string build_tool, vcvars = "";
 	getline(config, build_tool);
 	string build_command;
@@ -75,7 +71,7 @@ void build_dll() {
 		build_command = build_tool +
 			" -shared -fPIC -std=c++14 -g -O3 -mavx -funsafe-math-optimizations -ffast-math " + result_name + ".cpp -pthread -o " + result_name + ".so";
 	}
-	//cout << "building with:\n" << build_command << endl;
+	cout << "building with:\n" << build_command << endl;
 	if (system((build_command + " > build.out 2>&1").c_str())) {
 		throw compile_exception{ "Failed to build the evaluator. See build.out for more information."s };
 	}
@@ -83,7 +79,7 @@ void build_dll() {
 
 using evaluator_t = vector<double>(*)(map<string, vector<double>*>);
 
-evaluator_t link_dll() {
+evaluator_t link_library() {
 #ifdef _WIN32
 	HINSTANCE dll = LoadLibrary((result_name + ".dll").c_str());
 	if (!dll) {
@@ -111,8 +107,8 @@ evaluator_t link_dll() {
 function<vector<double>(map<string, vector<double>*>)> get_evaluator(Fix<F> tree, int threshold, bool restricted) {
 	result_name = "result_" + to_string(result_id);
 	process_tree(tree, threshold, restricted);
-	build_dll();
-	evaluator_t evaluator = link_dll();
+	build_library();
+	evaluator_t evaluator = link_library();
 	++result_id;
 	return evaluator;
 }

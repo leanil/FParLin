@@ -16,20 +16,20 @@ struct alg_visitor : boost::static_visitor<string> {
 		return "double";
 	}
 
-	string operator()(Size_t a) const {
-		return to_string(a.size);
+	string operator()(Size_t node) const {
+		return to_string(node.size);
 	}
 
-	string operator()(Product_t<string> a) const {
-		return "(" + a.left() + ")*(" + a.right() + ")";
+	string operator()(Product_t<string> node) const {
+		return "(" + node.left() + ")*(" + node.right() + ")";
 	}
 
-	string operator()(Power_t<string> a) const {
-		return "(" + a.left() + ")^(" + a.right() + ")";
+	string operator()(Power_t<string> node) const {
+		return "(" + node.left() + ")^(" + node.right() + ")";
 	}
 
-	string operator()(Arrow_t<string> a) const {
-		return "(" + a.left() + ")->(" + a.right() + ")";
+	string operator()(Arrow_t<string> node) const {
+		return "(" + node.left() + ")->(" + node.right() + ")";
 	}
 };
 

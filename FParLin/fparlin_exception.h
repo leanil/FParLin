@@ -8,8 +8,8 @@ struct FParLin_exception {
 	std::string what;
 };
 
-struct type_mismatch_excetion : FParLin_exception {
-	type_mismatch_excetion(const std::string& what, const std::list<std::string>& errors) :
+struct type_mismatch_exception : FParLin_exception {
+	type_mismatch_exception(const std::string& what, const std::list<std::string>& errors) :
 		FParLin_exception{ what }, errors{ errors } {}
 	std::list<std::string> errors;
 };

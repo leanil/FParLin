@@ -19,16 +19,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="coalg.hpp" />
     <ClInclude Include="codegen_alg.h" />
-    <ClInclude Include="const.hpp" />
     <ClInclude Include="costest_alg.h" />
     <ClInclude Include="evaluator.h" />
-    <ClInclude Include="evaluator_alg.hpp" />
     <ClInclude Include="expr.h" />
     <ClInclude Include="expr_fmap.h" />
     <ClInclude Include="falgebra.h" />
     <ClInclude Include="fix.h" />
+    <ClInclude Include="fparlin_exception.h" />
     <ClInclude Include="type.h" />
     <ClInclude Include="typecheck_alg.h" />
     <ClInclude Include="typeprinter_alg.h" />
@@ -42,6 +40,9 @@
     <ClCompile Include="type.cpp" />
     <ClCompile Include="typecheck_alg.cpp" />
     <ClCompile Include="typeprinter_alg.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="exceptions.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}</ProjectGuid>
@@ -65,7 +66,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>LLVM-vs2014</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">

@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-std::function<std::vector<double>(std::map<std::string, std::vector<double>*>)>  get_evaluator(Fix<F> tree, int threshold, bool restricted = true);
+std::function<std::vector<double>(std::map<std::string, std::vector<double>*>)> 
+get_evaluator(Fix<F> tree, int threshold, bool restricted = true);
 
 template<typename T>
 std::ostream& operator<<(std::ostream& out, const std::vector<T>& v) {

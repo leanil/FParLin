@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FParLin", "FParLin\FParLin.vcxproj", "{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}"
 EndProject
@@ -9,24 +9,30 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Eval", "Eval\Eval.vcxproj",
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}.Debug|x64.ActiveCfg = Debug|x64
 		{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}.Debug|x64.Build.0 = Debug|x64
 		{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}.Debug|x86.ActiveCfg = Debug|Win32
 		{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}.Debug|x86.Build.0 = Debug|Win32
+		{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}.Release|Any CPU.ActiveCfg = Release|Win32
 		{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}.Release|x64.ActiveCfg = Release|x64
 		{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}.Release|x64.Build.0 = Release|x64
 		{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}.Release|x86.ActiveCfg = Release|Win32
 		{8291F5E6-1045-420F-AC3F-3D5B928E1FFB}.Release|x86.Build.0 = Release|Win32
+		{8343FFE9-4689-4A3D-AEA2-52E87FA52A1F}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{8343FFE9-4689-4A3D-AEA2-52E87FA52A1F}.Debug|x64.ActiveCfg = Debug|x64
 		{8343FFE9-4689-4A3D-AEA2-52E87FA52A1F}.Debug|x64.Build.0 = Debug|x64
 		{8343FFE9-4689-4A3D-AEA2-52E87FA52A1F}.Debug|x86.ActiveCfg = Debug|Win32
 		{8343FFE9-4689-4A3D-AEA2-52E87FA52A1F}.Debug|x86.Build.0 = Debug|Win32
+		{8343FFE9-4689-4A3D-AEA2-52E87FA52A1F}.Release|Any CPU.ActiveCfg = Release|Win32
 		{8343FFE9-4689-4A3D-AEA2-52E87FA52A1F}.Release|x64.ActiveCfg = Release|x64
 		{8343FFE9-4689-4A3D-AEA2-52E87FA52A1F}.Release|x64.Build.0 = Release|x64
 		{8343FFE9-4689-4A3D-AEA2-52E87FA52A1F}.Release|x86.ActiveCfg = Release|Win32

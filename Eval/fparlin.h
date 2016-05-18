@@ -16,7 +16,7 @@ vector<T> make_vector(initializer_list<T> list) {
 	return vector<T>(list.begin(), list.end());
 }
 
-vector<double> vectorize(vector<double> v) {
+vector<double>& vectorize(vector<double>& v) {
 	return v;
 }
 
@@ -26,9 +26,8 @@ vector<double> vectorize(double d) {
 
 template<typename F, typename E>
 auto Map(const F& f, const vector<E>& v) {
-	vector<result_of_t<F(E)>> result;
-	result.reserve(v.size());
-	transform(v.begin(), v.end(), back_inserter(result), f);
+	vector<result_of_t<F(E)>> result(v.size());
+	transform(v.begin(), v.end(), result.begin(), f);
 	return result;
 }
 
@@ -39,9 +38,8 @@ E Reduce(const F& f, const vector<E>& v) {
 
 template<typename F, typename A, typename B>
 auto Zip(const F& f, const vector<A>& a, const vector<B>& b) {
-	vector<result_of_t<result_of_t<F(A)>(B)>> result;
-	result.reserve(a.size());
-	transform(a.begin(), a.end(), b.begin(), back_inserter(result), [&](const A& a, const B& b) {return f(a)(b); });
+	vector<result_of_t<result_of_t<F(A)>(B)>> result(a.size());
+	transform(a.begin(), a.end(), b.begin(), result.begin(), [&](const A& a, const B& b) {return f(a)(b); });
 	return result;
 }
 

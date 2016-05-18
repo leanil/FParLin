@@ -30,6 +30,7 @@ App(
 Fix<F> testExpr4 =
 Vec({ testExpr1, testExpr2, testExpr1 });
 
+//map(x->x+5, testExpr4)
 Fix<F> testExpr5 =
 Map(
 	App(
@@ -39,6 +40,7 @@ Map(
 		5_scl),
 	testExpr4);
 
+//Mátrix-vektor szorzás
 auto v = Var(Power(Double(), 3_size), 'v');
 Fix<F> testExpr6 =
 Map(
@@ -56,3 +58,18 @@ Map(
 	Vec({
 		Vec({ 1_scl, 2_scl, 3_scl }),
 		Vec({ 4_scl, 5_scl, 6_scl }) }));
+
+//3 * a + b
+static auto a = VecView("a", 10000000);
+static auto b = VecView("b", 10000000);
+static auto p = Var(Double(), 'p');
+static auto q = Var(Double(), 'q');
+Fix<F> testExpr7 =
+Zip(
+	Lam(Arrow(Double(), Double()), p,
+		Lam(Double(), q,
+			p + q)),
+	Map(
+		Lam(Double(), p, 3_scl * p),
+		a),
+	b);

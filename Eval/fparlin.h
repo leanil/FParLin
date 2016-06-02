@@ -46,7 +46,7 @@ auto Zip(const F& f, const vector<A>& a, const vector<B>& b) {
 template<typename E>
 unsigned batch_size(const vector<E>& v) {
 	unsigned n = thread::hardware_concurrency();
-	return v.size() / n + (v.size() % n != 0);
+	return (unsigned)v.size() / n + (v.size() % n != 0);
 }
 
 template<typename F, typename E>

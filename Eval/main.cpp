@@ -69,8 +69,9 @@ void run_functional_test() {
 
 int main() {
 	try {
-		//run_performance_test();
-		run_functional_test();
+		run_performance_test();
+		//run_functional_test();
+		//run_error_test();
 	}
 	catch (const type_mismatch_exception& e) {
 		cout << e.what << endl;

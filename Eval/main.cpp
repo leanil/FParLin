@@ -25,11 +25,11 @@ double measure_time(const function<vector<double>(map<string, vector<double>*>)>
 void generate_random_vector(vector<double>& vec) {
 	default_random_engine rand;
 	uniform_real_distribution<> dist;
-	generate(vec.begin(), vec.end(), [&]() {return dist(rand); });
+	generate(vec.begin(), vec.end(), [&] () {return dist(rand); });
 }
 
 void run_performance_test() {
-	
+
 	vector<double> *vec = new vector<double>(big_test_size), *row = new vector<double>(big_test_size);
 	vector<double>* vec_to_sum = new vector<double>(100000000);
 	generate_random_vector(*vec);
@@ -63,14 +63,21 @@ void run_error_test() {
 }
 
 void run_functional_test() {
-	map<string, vector<double>*> bigVectors{ { "vec", new vector<double>{7,8,9}} };
-	cout << get_evaluator(testExpr6, 20)(bigVectors) << endl;
+	map<string, vector<double>*> bigVectors{
+		{ "a", new vector<double>{1,2,3}},
+		{ "b", new vector<double>{ 4,5,6 }},
+		{ "v", new vector<double>{ 7,8,9 }} };
+	int fail = 0;
+	for (const auto& test : tests) {
+		fail += get_evaluator(test.first, 20)(bigVectors) != test.second;
+	}
+	cout << "test " << (fail ? "failed(" + to_string(fail) + ")" : "successful") << endl;
 }
 
 int main() {
 	try {
-		run_performance_test();
-		//run_functional_test();
+		//run_performance_test();
+		run_functional_test();
 		//run_error_test();
 	}
 	catch (const type_mismatch_exception& e) {

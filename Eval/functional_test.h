@@ -1,11 +1,16 @@
 ﻿#pragma once
 
 #include "expr.h"
+#include <utility>
+#include <vector>
 
-extern Fix<F> testExpr1; // (2+3)*4 == 20
-extern Fix<F> testExpr2; //((λ_x.λ_y.x+y)5)(4*3) == 17
-extern Fix<F> testExpr3; //((λ_x.x+1)+(λ_y.y*y))(λ_x.x+x)2 == 21
-extern Fix<F> testExpr4;
-extern Fix<F> testExpr5;
-extern Fix<F> testExpr6;
-extern Fix<F> testExpr7;
+using test_t = std::pair<Fix<F>, std::vector<double>>;
+
+extern test_t testExpr1; // (2+3)*4 == 20
+extern test_t testExpr2; //((λ_x.λ_y.x+y)5)(4*3) == 17
+extern test_t testExpr3; //((λ_x.x+1)+(λ_y.y*y))(λ_x.x+x)2 == 21
+extern test_t testExpr4;
+extern test_t testExpr5;
+extern test_t testExpr6;
+extern test_t testExpr7;
+extern std::vector<test_t> tests;

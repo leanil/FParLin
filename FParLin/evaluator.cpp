@@ -71,7 +71,7 @@ void build_library() {
 		build_command = build_tool +
 			" -shared -fPIC -std=c++14 -g -O3 -mavx -funsafe-math-optimizations -ffast-math " + result_name + ".cpp -pthread -o " + result_name + ".so";
 	}
-	cout << "building with:\n" << build_command << endl;
+	//cout << "building with:\n" << build_command << endl;
 	if (system((build_command + " > build.out 2>&1").c_str())) {
 		throw compile_exception{ "Failed to build the evaluator. See build.out for more information."s };
 	}

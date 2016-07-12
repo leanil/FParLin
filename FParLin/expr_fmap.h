@@ -20,7 +20,7 @@ struct functor_visitor: boost::static_visitor<ExprF<std::result_of_t<Fun(A)>>> {
 	}
 
 	ExprF<B> operator()(VectorView e) const {
-		return VectorView{ e.id, e.vector, e.size };
+		return VectorView{ e.id, e.size };
 	}
 
 	ExprF<B> operator()(Vector<A> e) const {

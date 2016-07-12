@@ -2,6 +2,8 @@
 #include <boost/variant/apply_visitor.hpp>
 #include <boost/variant/static_visitor.hpp>
 
+using namespace std;
+
 struct alg_visitor : boost::static_visitor<string> {
 
 	string operator()(Invalid_t) const {

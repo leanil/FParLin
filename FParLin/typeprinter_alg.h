@@ -3,4 +3,4 @@
 #include "type.h"
 #include <string>
 
-string typeprinter_alg(TF<string>);
+std::string typeprinter_alg(TF<std::string>);

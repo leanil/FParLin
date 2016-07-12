@@ -5,6 +5,6 @@
 #include <utility>
 #include <list>
 
-using typecheck_t = pair<Fix<F>, list<string>>;
+using typecheck_t = std::pair<Fix<F>, std::list<std::string>>;
 
 typecheck_t typecheck_alg(F<typecheck_t>);

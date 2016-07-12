@@ -5,8 +5,6 @@
 #include <boost/variant/variant.hpp>
 #include <memory>
 
-using namespace std;
-
 struct Invalid_t {};
 
 struct Int_t {};
@@ -22,8 +20,8 @@ struct Product_t {
 	Product_t(A left, A right) : left_(new A(left)), right_(new A(right)) {}
 	A& left() const { return *left_; }
 	A& right() const { return *right_; }
-	shared_ptr<A> left_;
-	shared_ptr<A> right_;
+	std::shared_ptr<A> left_;
+	std::shared_ptr<A> right_;
 };
 
 template<typename A>
@@ -31,8 +29,8 @@ struct Power_t {
 	Power_t(A left, A right) : left_(new A(left)), right_(new A(right)) {}
 	A& left() const { return *left_; }
 	A& right() const { return *right_; }
-	shared_ptr<A> left_;
-	shared_ptr<A> right_;
+	std::shared_ptr<A> left_;
+	std::shared_ptr<A> right_;
 };
 
 template<typename A>
@@ -40,8 +38,8 @@ struct Arrow_t {
 	Arrow_t(A left, A right) : left_(new A(left)), right_(new A(right)) {}
 	A& left() const { return *left_; }
 	A& right() const { return *right_; }
-	shared_ptr<A> left_;
-	shared_ptr<A> right_;
+	std::shared_ptr<A> left_;
+	std::shared_ptr<A> right_;
 };
 
 template<typename A>

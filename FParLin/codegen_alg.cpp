@@ -4,6 +4,8 @@
 #include <boost/variant/static_visitor.hpp>
 #include <algorithm>
 
+using namespace std;
+
 struct codegen_alg_visitor : boost::static_visitor<codegen_t> {
 
 	codegen_alg_visitor(const F<codegen_t>& node, int threshold, bool restricted) :

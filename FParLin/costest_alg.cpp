@@ -6,6 +6,8 @@
 #include <numeric>
 #include <vector>
 
+using namespace std;
+
 struct costest_alg_visitor : boost::static_visitor<int> {
 
 	int operator()(Scalar op) const {

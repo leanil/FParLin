@@ -2,8 +2,6 @@
 #define TYPE_H
 
 #include "fix.h"
-#include <type_traits>
-template<typename T, typename U> using is_assignable = std::is_assignable<T, U>;
 #include <boost/variant/variant.hpp>
 #include <memory>
 

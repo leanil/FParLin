@@ -3,4 +3,4 @@
 #include "expr.h"
 #include "fix.h"
 
-Fix<F> costest_alg(F<Fix<F>> e);
+FF costest_alg(F<FF> e);

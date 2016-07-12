@@ -7,7 +7,7 @@ static auto v = Var(Power(Double(), Size(big_test_size)), 'v');
 static auto row = VecView("row", big_test_size);
 
 // R^(16 x size) * R^size
-Fix<F> mat_vec_mul =
+FF mat_vec_mul =
 Reduce(
 	Lam(double_to_double, x,
 		Lam(Double(), y,
@@ -28,7 +28,7 @@ Reduce(
 						VecView("vec", big_test_size)))),
 			Vec({row, row, row, row, row, row, row, row, row, row, row, row, row, row, row, row, }))));
 
-Fix<F> vec_sum =
+FF vec_sum =
 Reduce(
 	Lam(double_to_double, x,
 		Lam(Double(), y,

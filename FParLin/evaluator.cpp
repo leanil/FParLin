@@ -18,7 +18,7 @@ using namespace std;
 static int result_id = 0;
 static string result_name;
 
-void process_tree(Fix<F> tree, int threshold, bool restricted) {
+void process_tree(FF tree, int threshold, bool restricted) {
 	typecheck_t checked = cata(typecheck_alg, tree);
 	if (!checked.second.empty()) {
 		throw type_mismatch_exception(
@@ -104,7 +104,7 @@ evaluator_t link_library() {
 	return (evaluator_t)evaluator;
 }
 
-function<vector<double>(map<string, vector<double>*>)> get_evaluator(Fix<F> tree, int threshold, bool restricted) {
+function<vector<double>(map<string, vector<double>*>)> get_evaluator(FF tree, int threshold, bool restricted) {
 	result_name = "result_" + to_string(result_id);
 	process_tree(tree, threshold, restricted);
 	build_library();

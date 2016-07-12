@@ -4,7 +4,7 @@
 #include <utility>
 #include <vector>
 
-using test_t = std::pair<Fix<F>, std::vector<double>>;
+using test_t = std::pair<FF, std::vector<double>>;
 
 extern test_t testExpr1; // (2+3)*4 == 20
 extern test_t testExpr2; //((λ_x.λ_y.x+y)5)(4*3) == 17

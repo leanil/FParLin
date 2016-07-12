@@ -4,43 +4,43 @@
 static Fix<TF> double_to_double = Arrow(Double(), Double());
 static auto x = Var(Double(), 'x'), y = Var(Double(), 'y');
 
-Fix<F> typeError1 =
+FF typeError1 =
 Vec({ 0_scl,	VecView("vec",1) });
 
-Fix<F> typeError2 =
+FF typeError2 =
 0_scl + VecView("vec", 1);
 
-Fix<F> typeError3 =
+FF typeError3 =
 App(0_scl, 0_scl);
 
-Fix<F> typeError4 =
+FF typeError4 =
 App(
 	Lam(Double(), x, Var(Double(), 'x')),
 	VecView("vec", 1));
 
-Fix<F> typeError5 =
+FF typeError5 =
 Lam(double_to_double, x, 0_scl);
 
-Fix<F> typeError6 =
+FF typeError6 =
 Map(0_scl, 0_scl);
 
-Fix<F> typeError7 =
+FF typeError7 =
 Map(
 	Lam(Double(), Var(Power(Double(), 1_size), 'x'), 0_scl),
 	VecView("vec", 1));
 
-Fix<F> typeError8 =
+FF typeError8 =
 Reduce(
 	Lam(double_to_double, x, 0_scl),
 	0_scl);
 
-Fix<F> typeError9 =
+FF typeError9 =
 Reduce(
 	Lam(double_to_double, Var(Power(Double(), 1_size), 'x'),
 		Lam(Double(), y, 0_scl)),
 	Vec({ Var(Int(), 'x') }));
 
-Fix<F> typeError10 =
+FF typeError10 =
 Zip(
 	Lam(double_to_double, Var(Power(Double(), 1_size), 'x'),
 		Lam(Double(), y, 0_scl)),
@@ -48,5 +48,5 @@ Zip(
 	Vec({ Var(Int(), 'x') }));
 
 
-Fix<F> typeErrors =
+FF typeErrors =
 Vec({ typeError1, typeError2, typeError3, typeError4, typeError5, typeError6, typeError7, typeError8, typeError9, typeError10 });

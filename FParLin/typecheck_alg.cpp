@@ -13,7 +13,7 @@
 using namespace std;
 
 struct typecheck_result {
-	ExprF<Fix<F>> operation;
+	ExprF<FF> operation;
 	Fix<TF> type;
 	list<string> errors;
 };
@@ -36,10 +36,10 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_result> {
 		for (auto e : op.elements) {
 			errors.insert(errors.end(), e->second.begin(), e->second.end());
 		}
-		vector<Fix<F>> elements;
+		vector<FF> elements;
 		transform(op.elements.begin(), op.elements.end(), back_inserter(elements),
 			[] (shared_ptr<typecheck_t> p) {return p->first; });
-		Vector<Fix<F>> b(elements);
+		Vector<FF> b(elements);
 		if (errors.empty()) {
 			string type_str = cata(typeprinter_alg, b.elements[0]->type);
 			unsigned i;
@@ -59,7 +59,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_result> {
 		list<string> errors;
 		errors.insert(errors.end(), op.left().second.begin(), op.left().second.end());
 		errors.insert(errors.end(), op.right().second.begin(), op.right().second.end());
-		Addition<Fix<F>> b(op.left().first, op.right().first);
+		Addition<FF> b(op.left().first, op.right().first);
 		if (errors.empty()) {
 			if (!is_of_type<Int_t>(b.left()) && !is_of_type<Double_t>(b.left())) {
 				errors.push_back(cata(typeprinter_alg, b.left().type) + " not scalar");
@@ -79,7 +79,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_result> {
 		list<string> errors;
 		errors.insert(errors.end(), op.left().second.begin(), op.left().second.end());
 		errors.insert(errors.end(), op.right().second.begin(), op.right().second.end());
-		Multiplication<Fix<F>> b(op.left().first, op.right().first);
+		Multiplication<FF> b(op.left().first, op.right().first);
 		if (errors.empty()) {
 			if (!is_of_type<Int_t>(b.left()) && !is_of_type<Double_t>(b.left())) {
 				errors.push_back(cata(typeprinter_alg, b.left().type) + " not scalar");
@@ -99,7 +99,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_result> {
 		list<string> errors;
 		errors.insert(errors.end(), op.lambda().second.begin(), op.lambda().second.end());
 		errors.insert(errors.end(), op.input().second.begin(), op.input().second.end());
-		Apply<Fix<F>> b(op.lambda().first, op.input().first);
+		Apply<FF> b(op.lambda().first, op.input().first);
 		Fix<TF> type;
 		if (errors.empty()) {
 			if (!is_of_type<Arrow_t<Fix<TF>>>(b.lambda())) {
@@ -120,7 +120,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_result> {
 
 	typecheck_result operator()(Lambda<typecheck_t> op) const {
 		list<string> errors(op.body().second);
-		Lambda<Fix<F>> b(op.body().first, op.id);
+		Lambda<FF> b(op.body().first, op.id);
 		Fix<TF> type;
 		if (errors.empty()) {
 			auto lambda_type = boost::get<Arrow_t<Fix<TF>>>(node.type);
@@ -142,7 +142,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_result> {
 		list<string> errors;
 		errors.insert(errors.end(), op.lambda().second.begin(), op.lambda().second.end());
 		errors.insert(errors.end(), op.vector().second.begin(), op.vector().second.end());
-		Map_<Fix<F>> b(op.lambda().first, op.vector().first);
+		Map_<FF> b(op.lambda().first, op.vector().first);
 		Fix<TF> type;
 		if (errors.empty()) {
 			if (!is_of_type<Arrow_t<Fix<TF>>>(b.lambda())) {
@@ -169,7 +169,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_result> {
 		list<string> errors;
 		errors.insert(errors.end(), op.lambda().second.begin(), op.lambda().second.end());
 		errors.insert(errors.end(), op.vector().second.begin(), op.vector().second.end());
-		Reduce_<Fix<F>> b(op.lambda().first, op.vector().first);
+		Reduce_<FF> b(op.lambda().first, op.vector().first);
 		Fix<TF> type;
 		if (errors.empty()) {
 			if (!is_of_type<Arrow_t<Fix<TF>>>(b.lambda()) ||
@@ -210,7 +210,7 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_result> {
 		errors.insert(errors.end(), op.lambda().second.begin(), op.lambda().second.end());
 		errors.insert(errors.end(), op.vector_1().second.begin(), op.vector_1().second.end());
 		errors.insert(errors.end(), op.vector_2().second.begin(), op.vector_2().second.end());
-		Zip_<Fix<F>> b(op.lambda().first, op.vector_1().first, op.vector_2().first);
+		Zip_<FF> b(op.lambda().first, op.vector_1().first, op.vector_2().first);
 		Fix<TF> type;
 		if (errors.empty()) {
 			if (!is_of_type<Arrow_t<Fix<TF>>>(b.lambda()) ||
@@ -255,5 +255,5 @@ struct typecheck_alg_visitor : boost::static_visitor<typecheck_result> {
 
 typecheck_t typecheck_alg(F<typecheck_t> e) {
 	typecheck_result result = boost::apply_visitor(typecheck_alg_visitor(e), e.operation);
-	return{ Fx(F<Fix<F>>{result.operation, result.type}), result.errors };
+	return{ Fx(F<FF>{result.operation, result.type}), result.errors };
 }

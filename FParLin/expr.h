@@ -114,8 +114,7 @@ using ExprF = boost::variant<
 	Variable,
 	Map_<A>,
 	Reduce_<A>,
-	Zip_<A>
->;
+	Zip_<A>>;
 
 template<typename A>
 struct F {
@@ -124,43 +123,34 @@ struct F {
 	int cost;
 };
 
-Fix<F> operator""_scl(unsigned long long val);
+using FF = Fix<F>;
 
-Fix<F> operator""_scl(long double val);
+FF operator""_scl(unsigned long long val);
 
-Fix<F> VecView(std::string name, unsigned size);
+FF operator""_scl(long double val);
 
-template<typename A>
-Fix<F> Vec(std::initializer_list<A> a) { return Fx(F<Fix<F>>{Vector<A>(a)}); }
+FF VecView(std::string name, unsigned size);
 
-template<typename A>
-Fix<F> operator+(A a, A b) { return Fx(F<Fix<F>>{Addition<A>(a, b)}); }
+FF Vec(std::initializer_list<FF> a);
 
-template<typename A>
-Fix<F> operator*(A a, A b) { return Fx(F<Fix<F>>{Multiplication<A>(a, b)}); }
+FF operator+(FF a, FF b);
 
-template<typename A>
-Fix<F> App(A lambda, A value) { return Fx(F<Fix<F>>{Apply<A>(lambda, value)}); }
+FF operator*(FF a, FF b);
 
-template<typename A>
-Fix<F> Lam(Fix<TF> return_type, F<A> variable, A body) {
-	return Fx(F<Fix<F>>{Lambda<A>(body, boost::get<Variable>(variable.operation).id), Arrow(variable.type, return_type)});
-}
+FF App(FF lambda, FF value);
 
-template<typename A = Fix<F>>
-Fix<F> Var(Fix<TF> type, char id) { return Fx(F<Fix<F>>{Variable{ id }, type}); }
+FF Lam(Fix<TF> return_type, F<FF> variable, FF body);
 
-template<typename A>
-Fix<F> Map(A lambda, A vector) { return Fx(F<Fix<F>>{Map_<A>(lambda, vector)}); }
+FF Var(Fix<TF> type, char id);
+
+FF Map(FF lambda, FF vector);
+
+FF Reduce(FF lambda, FF vector);
+
+FF Zip(FF lambda, FF vector_1, FF vector_2);
 
 template<typename A>
-Fix<F> Reduce(A lambda, A vector) { return Fx(F<Fix<F>>{Reduce_<A>(lambda, vector)}); }
-
-template<typename A>
-Fix<F> Zip(A lambda, A vector_1, A vector_2) { return Fx(F<Fix<F>>{Zip_<A>(lambda, vector_1, vector_2)}); }
-
-template<typename A>
-bool is_of_type(Fix<F> a) {
+bool is_of_type(FF a) {
 	return a.type.type() == boost::typeindex::type_id<A>().type_info();
 }
 

@@ -43,28 +43,14 @@ struct Arrow_t {
 };
 
 template<typename A>
-using TypeF = boost::variant<
+using TF = boost::variant<
 	Invalid_t,
 	Int_t,
 	Double_t,
 	Size_t,
 	Product_t<A>,
 	Power_t<A>,
-	Arrow_t<A>
->;
-
-template<typename A>
-struct TF : TypeF<A> {
-	typedef TF<A> tag;
-	TF() : TypeF<A>(Invalid_t()) {}
-	TF(Invalid_t a) : TypeF<A>(a) {}
-	TF(Int_t a) : TypeF<A>(a) {}
-	TF(Double_t a) : TypeF<A>(a) {}
-	TF(Size_t a) : TypeF<A>(a) {}
-	TF(Product_t<A> a) : TypeF<A>(a) {}
-	TF(Power_t<A> a) : TypeF<A>(a) {}
-	TF(Arrow_t<A> a) : TypeF<A>(a) {}
-};
+	Arrow_t<A>>;
 
 Fix<TF> Invalid();
 
@@ -76,14 +62,9 @@ Fix<TF> operator""_size(unsigned long long x);
 
 Fix<TF> Size(unsigned x);
 
-//template<typename A>
-//Fix<TF> Product(A a, A b) { return Fx(TF<Fix<TF>>(Product_t<A>(a,b))); }
+Fix<TF> Power(Fix<TF> a, Fix<TF> b);
 
-template<typename A>
-Fix<TF> Power(A a, A b) { return Fx(TF<Fix<TF>>(Power_t<A>(a, b))); }
-
-template<typename A>
-Fix<TF> Arrow(A a, A b) { return Fx(TF<Fix<TF>>(Arrow_t<A>(a, b))); }
+Fix<TF> Arrow(Fix<TF> a, Fix<TF> b);
 
 #include "type_fmap.h"
 

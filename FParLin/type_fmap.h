@@ -6,11 +6,11 @@
 #include <type_traits>
 
 template<typename Fun, typename A>
-struct functor_visitor<Fun, TF<A>>: boost::static_visitor<TF<std::result_of_t<Fun(A)>>>
+struct type_functor_visitor: boost::static_visitor<TF<std::result_of_t<Fun(A)>>>
 {
 	typedef std::result_of_t<Fun(A)> B;
 
-	explicit functor_visitor(Fun f) : f(f) {}
+	type_functor_visitor(Fun f) : f(f) {}
 
 	TF<B> operator()(Invalid_t a) const {
 		return a;
@@ -43,3 +43,9 @@ struct functor_visitor<Fun, TF<A>>: boost::static_visitor<TF<std::result_of_t<Fu
 private:
 	Fun f;
 };
+
+template<typename Fun, typename A>
+typename type_functor_visitor<Fun, A>::result_type
+fmap(Fun f, TF<A> fa) {
+	return boost::apply_visitor(type_functor_visitor<Fun, A>(f), fa);
+}

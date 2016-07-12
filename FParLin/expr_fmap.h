@@ -6,61 +6,72 @@
 #include <algorithm>
 #include <iterator>
 #include <memory>
+#include <type_traits>
 
 template<typename Fun, typename A>
-struct functor_visitor<Fun, F<A>>
-	: boost::static_visitor <
-	F<typename std::result_of<Fun(A)>::type >>
-{
-	typedef typename std::result_of<Fun(A)>::type B;
+struct functor_visitor: boost::static_visitor<ExprF<std::result_of_t<Fun(A)>>> {
 
-	explicit functor_visitor(Fun f) : f(f) {}
+	using B = std::result_of_t<Fun(A)>;
 
-	F<B> operator()(Scalar e) const {
-		return Scalar{ e.value, e.type, e.cost };
+	functor_visitor(Fun f) : f(f) {}
+
+	ExprF<B> operator()(Scalar e) const {
+		return Scalar{ e.value };
 	}
 
-	F<B> operator()(VectorView e) const {
-		return VectorView{ e.id, e.vector, e.size, e.type, e.cost };
+	ExprF<B> operator()(VectorView e) const {
+		return VectorView{ e.id, e.vector, e.size };
 	}
 
-	F<B> operator()(Vector<A> e) const {
+	ExprF<B> operator()(Vector<A> e) const {
 		vector<B> tmp;
-		transform(e.elements.begin(), e.elements.end(), back_inserter(tmp), [&](shared_ptr<A> a) {return f(*a); });
-		return Vector<B>(tmp, e.type, e.cost);
+		transform(e.elements.begin(), e.elements.end(), back_inserter(tmp), [&] (shared_ptr<A> a) {return f(*a); });
+		return Vector<B>(tmp);
 	}
 
-	F<B> operator()(Addition<A> e) const {
-		return Addition<B>(f(e.left()), f(e.right()), e.type, e.cost);
+	ExprF<B> operator()(Addition<A> e) const {
+		return Addition<B>(f(e.left()), f(e.right()));
 	}
 
-	F<B> operator()(Multiplication<A> e) const {
-		return Multiplication<B>(f(e.left()), f(e.right()), e.type, e.cost);
+	ExprF<B> operator()(Multiplication<A> e) const {
+		return Multiplication<B>(f(e.left()), f(e.right()));
 	}
 
-	F<B> operator()(Apply<A> e) const {
-		return Apply<B>(f(e.lambda()), f(e.input()), e.type, e.cost);
+	ExprF<B> operator()(Apply<A> e) const {
+		return Apply<B>(f(e.lambda()), f(e.input()));
 	}
 
-	F<B> operator()(Lambda<A> e) const {
-		return Lambda<B>(f(e.body()), e.id, e.type, e.cost);
+	ExprF<B> operator()(Lambda<A> e) const {
+		return Lambda<B>(f(e.body()), e.id);
 	}
 
-	F<B> operator()(Variable e) const {
-		return Variable{ e.type, e.id, e.cost };
+	ExprF<B> operator()(Variable e) const {
+		return Variable{e.id};
 	}
 
-	F<B> operator()(Map_<A> e) const {
-		return Map_<B>(f(e.lambda()), f(e.vector()), e.type, e.cost);
+	ExprF<B> operator()(Map_<A> e) const {
+		return Map_<B>(f(e.lambda()), f(e.vector()));
 	}
 
-	F<B> operator()(Reduce_<A> e) const {
-		return Reduce_<B>(f(e.lambda()), f(e.vector()), e.type, e.cost);
+	ExprF<B> operator()(Reduce_<A> e) const {
+		return Reduce_<B>(f(e.lambda()), f(e.vector()));
 	}
 
-	F<B> operator()(Zip_<A> e) const {
-		return Zip_<B>(f(e.lambda()), f(e.vector_1()), f(e.vector_2()), e.type, e.cost);
+	ExprF<B> operator()(Zip_<A> e) const {
+		return Zip_<B>(f(e.lambda()), f(e.vector_1()), f(e.vector_2()));
 	}
-private:
+
 	Fun f;
 };
+
+template<typename Fun, typename A>
+typename functor_visitor<Fun, A>::result_type
+fmap(Fun f, ExprF<A> fa) {
+	return boost::apply_visitor(functor_visitor<Fun, A>(f), fa);
+}
+
+template<typename Fun, typename A>
+F<std::result_of_t<Fun(A)>>
+fmap(Fun f, F<A> fa) {
+	return F<std::result_of_t<Fun(A)>>{ fmap(f,fa.operation), fa.type, fa.cost };
+}

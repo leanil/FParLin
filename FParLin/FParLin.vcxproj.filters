@@ -33,9 +33,6 @@
     <ClInclude Include="falgebra.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="fix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="type.h">
       <Filter>Header Files</Filter>
     </ClInclude>

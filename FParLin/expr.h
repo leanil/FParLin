@@ -1,7 +1,6 @@
-#ifndef EXPR_H
-#define EXPR_H
+#pragma once
 
-#include "fix.h"
+#include "falgebra.h"
 #include "type.h"
 #include <boost/type_index.hpp>
 #include <boost/variant/variant.hpp>
@@ -160,5 +159,3 @@ bool is_of_type(Fix<TF> a) {
 }
 
 #include "expr_fmap.h"
-
-#endif

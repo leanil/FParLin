@@ -15,17 +15,17 @@ struct functor_visitor: boost::static_visitor<ExprF<std::result_of_t<Fun(A)>>> {
 
 	functor_visitor(Fun f) : f(f) {}
 
-	ExprF<B> operator()(Scalar e) const {
-		return Scalar{ e.value };
+	ExprF<B> operator()(Scalar op) const {
+		return op;
 	}
 
-	ExprF<B> operator()(VectorView e) const {
-		return VectorView{ e.id, e.size };
+	ExprF<B> operator()(VectorView op) const {
+		return op;
 	}
 
-	ExprF<B> operator()(Vector<A> e) const {
-		vector<B> tmp;
-		transform(e.elements.begin(), e.elements.end(), back_inserter(tmp), [&] (shared_ptr<A> a) {return f(*a); });
+	ExprF<B> operator()(const Vector<A>& op) const {
+		vector<B> tmp(op.elements.size());
+		transform(op.elements.begin(), op.elements.end(), tmp.begin(), [&] (shared_ptr<A> a) {return f(*a); });
 		return Vector<B>(tmp);
 	}
 

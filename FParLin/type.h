@@ -1,7 +1,6 @@
-#ifndef TYPE_H
-#define TYPE_H
+#pragma once
 
-#include "fix.h"
+#include "falgebra.h"
 #include <boost/variant/variant.hpp>
 #include <memory>
 
@@ -67,5 +66,3 @@ Fix<TF> Power(Fix<TF> a, Fix<TF> b);
 Fix<TF> Arrow(Fix<TF> a, Fix<TF> b);
 
 #include "type_fmap.h"
-
-#endif

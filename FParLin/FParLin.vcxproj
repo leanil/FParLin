@@ -25,7 +25,6 @@
     <ClInclude Include="expr.h" />
     <ClInclude Include="expr_fmap.h" />
     <ClInclude Include="falgebra.h" />
-    <ClInclude Include="fix.h" />
     <ClInclude Include="fparlin_exception.h" />
     <ClInclude Include="type.h" />
     <ClInclude Include="typecheck_alg.h" />
